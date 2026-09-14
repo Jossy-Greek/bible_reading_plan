@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme/app_theme.dart';
+import '../../../app/widgets/sanctuary.dart';
 import '../../../core/time/format.dart';
 import '../../../core/time/local_date.dart';
 import '../../../domain/achievements/badges.dart';
@@ -15,16 +16,14 @@ class AchievementsScreen extends ConsumerWidget {
     final text = Theme.of(context).textTheme;
     final unlocked = ref.watch(unlockedBadgesProvider).value ?? const {};
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Achievements'),
-        actions: [
+      appBar: SanctuaryAppBar(
+        title: 'Achievements',
+        trailing: [
           Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Center(
-              child: Text(
-                '${unlocked.length} / ${kBadges.length}',
-                style: text.titleMedium?.copyWith(color: AppColors.inkSoft),
-              ),
+            padding: const EdgeInsets.only(right: 12),
+            child: Text(
+              '${unlocked.length} / ${kBadges.length}',
+              style: text.titleMedium?.copyWith(color: AppColors.inkSoft),
             ),
           ),
         ],

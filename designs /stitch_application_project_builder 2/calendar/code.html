@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#FBF8F1;color:#1F3A3D;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;vertical-align:middle;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: 'class', theme: { extend: { colors: { 'primary-fixed-dim': '#a0cfd4', 'on-primary-fixed-variant': '#1e4d52', 'surface-container': '#d6f3f7', 'on-tertiary-fixed-variant': '#5d4202', 'surface': '#eafdff', 'inverse-on-surface': '#d9f6fa', 'on-secondary-fixed': '#071f21', 'outline-variant': '#c0c8c9', 'surface-variant': '#cbe8eb', 'on-background': '#021f22', 'on-primary': '#ffffff', 'surface-container-highest': '#cbe8eb', 'on-tertiary': '#ffffff', 'on-secondary-container': '#51686a', 'surface-bright': '#eafdff', 'on-surface-variant': '#404849', 'teal-primary': '#2F5D62', 'primary-container': '#2f5d62', 'parchment-deep': '#F1EBDD', 'inverse-surface': '#193437', 'on-primary-fixed': '#002023', 'on-tertiary-container': '#eec67c', 'surface-card': '#FFFFFF', 'success-green': '#4E7D5B', 'surface-container-high': '#d0eef1', 'secondary-fixed-dim': '#b2cbcd', 'tertiary': '#533a00', 'error-container': '#ffdad6', 'outline': '#707979', 'ink-primary': '#1F3A3D', 'primary': '#14454a', 'ink-soft': '#52696B', 'surface-container-lowest': '#ffffff', 'on-error-container': '#93000a', 'on-primary-container': '#a5d4da', 'on-secondary': '#ffffff', 'error': '#ba1a1a', 'surface-dim': '#c2dfe3', 'inverse-primary': '#a0cfd4', 'parchment-bg': '#FBF8F1', 'primary-fixed': '#bbebf1', 'secondary': '#4c6264', 'tertiary-fixed-dim': '#e9c178', 'tertiary-container': '#6e5112', 'secondary-container': '#cee7e9', 'missed-red': '#C77B6A', 'surface-container-low': '#dbf9fd', 'surface-tint': '#38656a', 'on-error': '#ffffff', 'on-surface': '#021f22', 'secondary-fixed': '#cee7e9', 'tertiary-fixed': '#ffdea5', 'background': '#eafdff', 'gold-accent': '#C6A15B', 'on-tertiary-fixed': '#271900', 'on-secondary-fixed-variant': '#344b4d' }, borderRadius: { 'DEFAULT': '0.25rem', 'lg': '0.5rem', 'xl': '0.75rem', 'full': '9999px' }, spacing: { 'space-sm': '0.5rem', 'space-xl': '2rem', 'space-xs': '0.25rem', 'space-md': '1rem', 'space-lg': '1.5rem', 'gutter': '1rem', 'margin': '1.25rem' }, fontFamily: { 'body-md': ['Plus Jakarta Sans'], 'scripture-quote': ['Plus Jakarta Sans'], 'label-lg': ['Plus Jakarta Sans'], 'label-md': ['Plus Jakarta Sans'], 'display-countdown': ['Plus Jakarta Sans'], 'headline-lg': ['Plus Jakarta Sans'], 'headline-md': ['Plus Jakarta Sans'], 'title-lg': ['Plus Jakarta Sans'], 'title-md': ['Plus Jakarta Sans'], 'label-sm': ['Plus Jakarta Sans'], 'body-lg': ['Plus Jakarta Sans'], 'display-countdown-mobile': ['Plus Jakarta Sans'] }, fontSize: { 'body-md': ['15px', { lineHeight: '22px', fontWeight: '400' }], 'scripture-quote': ['16px', { lineHeight: '26px', letterSpacing: '0.01em', fontWeight: '400' }], 'label-lg': ['17px', { lineHeight: '22px', fontWeight: '600' }], 'label-md': ['13px', { lineHeight: '18px', letterSpacing: '0.04em', fontWeight: '600' }], 'display-countdown': ['64px', { lineHeight: '72px', letterSpacing: '-0.03em', fontWeight: '300' }], 'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '600' }], 'headline-md': ['24px', { lineHeight: '32px', letterSpacing: '0em', fontWeight: '600' }], 'title-lg': ['20px', { lineHeight: '28px', fontWeight: '600' }], 'title-md': ['18px', { lineHeight: '24px', fontWeight: '600' }], 'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '500' }], 'body-lg': ['17px', { lineHeight: '26px', fontWeight: '400' }], 'display-countdown-mobile': ['56px', { lineHeight: '64px', letterSpacing: '-0.02em', fontWeight: '300' }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-parchment-bg text-ink-primary font-body-md text-body-md flex flex-col min-h-screen antialiased selection:bg-teal-primary/20 selection:text-ink-primary"><header class="fixed top-0 w-full z-50 bg-parchment-bg/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Bible Reading Plan Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVWayM0fckQdf_TPfLJ_UvMuDR9y3l3Gf9MYWgtx1m8SJqvvGUFtLp6u9T7qI8tDLO7NyujixtgnllR8RaaXealWdZ17eWwXJrbRsTkHGaJ7PSHqja9Mubs5hhA4qjnWIabMsJLHijDDPPhtiZ3DVOLbxLgY1NNCn_gZjCbHWXbPHugaDX3pQ5f7SNS8MhXCbhDOXSiPWgiIdUfwiC3fGEFnlisCXty2PvrF2tQsFo7HtPH-B-x9ePXujt"/><div class="flex flex-col"><span class="font-label-sm text-label-sm uppercase tracking-wider text-ink-soft">Sanctuary Plan</span><h1 class="font-title-md text-title-md text-ink-primary leading-tight line-clamp-1">Calendar</h1></div></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1 bg-parchment-deep px-2.5 py-1 rounded-full text-ink-primary"><span class="text-sm leading-none">🔥</span><span class="font-label-md text-label-md text-ink-primary font-semibold">14</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-parchment-bg"><div class="flex flex-col w-full px-margin pb-6">
+<!-- Top Action & View Switcher Bar (Positioned under sticky app shell header) -->
+<div class="flex items-center justify-between pt-3 pb-4">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-teal-primary text-[22px]" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-title-lg text-title-lg text-ink-primary tracking-tight">Calendar</span>
+</div>
+<!-- Segmented Control Pill: Month | Year -->
+<div class="flex items-center bg-parchment-deep p-1 rounded-full">
+<button class="px-3.5 py-1 rounded-full font-label-md text-label-md transition-all duration-200 bg-teal-primary text-on-primary" id="tab-month-btn" onclick="switchCalendarView('month')">
+        Month
+      </button>
+<button class="px-3.5 py-1 rounded-full font-label-md text-label-md transition-all duration-200 text-ink-soft hover:text-ink-primary" id="tab-year-btn" onclick="switchCalendarView('year')">
+        Year
+      </button>
+</div>
+</div>
+<!-- Today's Sanctuary Card -->
+<div class="bg-surface-card rounded-[20px] p-6 shadow-sm flex items-center justify-between transition-transform active:scale-[0.99] duration-150">
+<div class="flex flex-col min-w-0 pr-3">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-ink-soft">Today • Day 252</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-parchment-deep text-ink-soft font-label-sm text-label-sm">
+          Pending
+        </span>
+</div>
+<h2 class="font-title-lg text-title-lg text-ink-primary font-semibold truncate leading-tight">
+        Genesis 9–12
+      </h2>
+<p class="font-body-md text-body-md text-ink-soft mt-0.5 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-missed-red/80"></span>
+        Not completed yet
+      </p>
+</div>
+<!-- Right Side Streak Callout -->
+<div class="flex flex-col items-center justify-center bg-parchment-bg px-3.5 py-2.5 rounded-2xl min-w-[64px] border-0">
+<div class="flex items-center gap-0.5">
+<span class="text-lg leading-none select-none">🔥</span>
+<span class="font-title-md text-title-md font-bold text-ink-primary leading-none">7</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-ink-soft mt-1">streak</span>
+</div>
+</div>
+<!-- VIEW CONTAINER: Month View (Active by default) -->
+<div class="flex flex-col mt-6 transition-opacity duration-200" id="view-month">
+<!-- Month Header with Navigation -->
+<div class="flex items-center justify-between mb-4 px-1">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-ink-soft font-semibold">2026 Reading Journey</span>
+<h3 class="font-headline-md text-headline-md text-ink-primary font-bold tracking-tight">September</h3>
+</div>
+<div class="flex items-center gap-1 bg-surface-card p-1 rounded-full shadow-sm">
+<button aria-label="Previous month" class="w-8 h-8 rounded-full flex items-center justify-center text-ink-soft hover:text-ink-primary hover:bg-parchment-deep transition-colors">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button aria-label="Next month" class="w-8 h-8 rounded-full flex items-center justify-center text-ink-soft hover:text-ink-primary hover:bg-parchment-deep transition-colors">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Weekday Row (Monday First) -->
+<div class="grid grid-cols-7 gap-1.5 text-center mb-2 px-0.5">
+<div class="font-label-sm text-label-sm font-semibold text-ink-soft py-1">M</div>
+<div class="font-label-sm text-label-sm font-semibold text-ink-soft py-1">T</div>
+<div class="font-label-sm text-label-sm font-semibold text-ink-soft py-1">W</div>
+<div class="font-label-sm text-label-sm font-semibold text-ink-soft py-1">T</div>
+<div class="font-label-sm text-label-sm font-semibold text-ink-soft py-1">F</div>
+<div class="font-label-sm text-label-sm font-semibold text-ink-soft py-1">S</div>
+<div class="font-label-sm text-label-sm font-semibold text-ink-soft py-1">S</div>
+</div>
+<!-- 7-Column Calendar Grid (September 2026 starts on Tuesday, 1 pad cell for Monday) -->
+<div class="grid grid-cols-7 gap-1.5 select-none">
+<!-- Monday Aug 31 (Outside month) -->
+<div class="h-[52px] rounded-[12px] flex flex-col items-center justify-center opacity-30">
+<span class="font-label-md text-label-md text-ink-soft">31</span>
+<span class="text-[10px] text-transparent leading-none mt-0.5">•</span>
+</div>
+<!-- Sep 1: Completed -->
+<div class="h-[52px] rounded-[12px] bg-success-green text-on-primary flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md font-semibold leading-tight">1</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 font-bold">✓</span>
+</div>
+<!-- Sep 2: Completed -->
+<div class="h-[52px] rounded-[12px] bg-success-green text-on-primary flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md font-semibold leading-tight">2</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 font-bold">✓</span>
+</div>
+<!-- Sep 3: Completed -->
+<div class="h-[52px] rounded-[12px] bg-success-green text-on-primary flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md font-semibold leading-tight">3</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 font-bold">✓</span>
+</div>
+<!-- Sep 4: Completed -->
+<div class="h-[52px] rounded-[12px] bg-success-green text-on-primary flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md font-semibold leading-tight">4</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 font-bold">✓</span>
+</div>
+<!-- Sep 5: Missed Day (18% red fill, red number, small circle) -->
+<div class="h-[52px] rounded-[12px] bg-error-container/40 text-missed-red flex flex-col items-center justify-center">
+<span class="font-label-md text-label-md font-bold leading-tight">5</span>
+<span class="text-[11px] leading-none mt-0.5 font-bold">○</span>
+</div>
+<!-- Sep 6: Completed -->
+<div class="h-[52px] rounded-[12px] bg-success-green text-on-primary flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md font-semibold leading-tight">6</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 font-bold">✓</span>
+</div>
+<!-- Sep 7: Completed -->
+<div class="h-[52px] rounded-[12px] bg-success-green text-on-primary flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md font-semibold leading-tight">7</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 font-bold">✓</span>
+</div>
+<!-- Sep 8: Completed -->
+<div class="h-[52px] rounded-[12px] bg-success-green text-on-primary flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md font-semibold leading-tight">8</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 font-bold">✓</span>
+</div>
+<!-- Sep 9: TODAY (Pending, Parchment-deep fill, teal accent outline, bold ink number) -->
+<div class="h-[52px] rounded-[12px] bg-parchment-deep text-ink-primary flex flex-col items-center justify-center relative shadow-sm" style="box-shadow: inset 0 0 0 2px #2F5D62;">
+<span class="font-label-md text-label-md font-bold leading-tight">9</span>
+<span class="w-1.5 h-1.5 rounded-full bg-teal-primary mt-1"></span>
+</div>
+<!-- Sep 10–30: Future Days in Plan (White fill, ink-soft number, dash beneath) -->
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">10</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">11</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">12</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">13</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">14</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">15</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">16</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">17</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">18</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">19</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">20</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">21</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">22</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">23</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">24</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">25</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">26</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">27</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">28</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">29</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<div class="h-[52px] rounded-[12px] bg-surface-card text-ink-soft flex flex-col items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md leading-tight">30</span>
+<span class="font-label-sm text-label-sm leading-none mt-0.5 text-ink-soft/60">–</span>
+</div>
+<!-- Outside plan: Oct 1-4 -->
+<div class="h-[52px] rounded-[12px] flex flex-col items-center justify-center opacity-30">
+<span class="font-label-md text-label-md text-ink-soft">1</span>
+<span class="text-[10px] text-transparent leading-none mt-0.5">•</span>
+</div>
+<div class="h-[52px] rounded-[12px] flex flex-col items-center justify-center opacity-30">
+<span class="font-label-md text-label-md text-ink-soft">2</span>
+<span class="text-[10px] text-transparent leading-none mt-0.5">•</span>
+</div>
+<div class="h-[52px] rounded-[12px] flex flex-col items-center justify-center opacity-30">
+<span class="font-label-md text-label-md text-ink-soft">3</span>
+<span class="text-[10px] text-transparent leading-none mt-0.5">•</span>
+</div>
+<div class="h-[52px] rounded-[12px] flex flex-col items-center justify-center opacity-30">
+<span class="font-label-md text-label-md text-ink-soft">4</span>
+<span class="text-[10px] text-transparent leading-none mt-0.5">•</span>
+</div>
+</div>
+<!-- Month Summary Metrics Micro-Card -->
+<div class="mt-5 bg-surface-card rounded-[16px] p-4 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-parchment-deep flex items-center justify-center text-teal-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-ink-primary font-semibold">September Pace</span>
+<span class="font-label-sm text-label-sm text-ink-soft">7 completed • 1 missed • 22 remaining</span>
+</div>
+</div>
+<span class="font-title-md text-title-md font-bold text-success-green">88%</span>
+</div>
+</div>
+<!-- VIEW CONTAINER: Year View (Heatmap matrix, toggled via JavaScript) -->
+<div class="hidden flex flex-col mt-6 transition-opacity duration-200" id="view-year">
+<div class="flex items-center justify-between mb-3 px-1">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-ink-soft font-semibold">Annual Tapestry</span>
+<h3 class="font-headline-md text-headline-md text-ink-primary font-bold">Year 2026</h3>
+</div>
+<div class="bg-surface-card px-3 py-1.5 rounded-full text-ink-soft font-label-md text-label-md shadow-sm">
+<span class="font-bold text-teal-primary">244</span> / 365 Days
+      </div>
+</div>
+<!-- Multi-month Heatmap Overview Cards -->
+<div class="bg-surface-card rounded-[20px] p-5 shadow-sm space-y-4">
+<!-- Q3 Mini Heatmap Display -->
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-md text-label-md font-semibold text-ink-primary">Quarter 3 (Jul – Sep)</span>
+<span class="font-label-sm text-label-sm text-success-green font-medium">92% completed</span>
+</div>
+<div class="grid grid-cols-12 gap-1 py-1">
+<!-- Density visual tiles -->
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-missed-red/40"></div>
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-missed-red/40"></div>
+<div class="h-4 rounded-[3px] bg-success-green"></div>
+<div class="h-4 rounded-[3px] bg-teal-primary animate-pulse"></div>
+<div class="h-4 rounded-[3px] bg-parchment-deep"></div>
+</div>
+</div>
+<!-- Year Heatmap Canvas Matrix -->
+<div class="pt-2">
+<span class="font-label-sm text-label-sm text-ink-soft block mb-2 uppercase tracking-wider">365-Day Plan Matrix</span>
+<div class="flex flex-wrap gap-[3px] justify-between">
+<!-- Render visual rhythm of year cells (52 weeks sampled) -->
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-missed-red/50"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-missed-red/50"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-missed-red/50"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-success-green"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-teal-primary ring-1 ring-teal-primary"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-parchment-deep"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-parchment-deep"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-parchment-deep"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-parchment-deep"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-parchment-deep"></div>
+<div class="w-[7px] h-[7px] rounded-[1px] bg-parchment-deep"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Legend Line at Bottom of Screen -->
+<div class="mt-6 flex items-center justify-center gap-6 py-2 px-3 text-ink-soft select-none font-label-md text-label-md">
+<div class="flex items-center gap-1.5">
+<span class="font-bold text-success-green text-sm leading-none">✓</span>
+<span class="text-ink-primary font-medium">completed</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-bold text-missed-red text-sm leading-none">○</span>
+<span class="text-ink-primary font-medium">missed</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-bold text-ink-soft text-sm leading-none">–</span>
+<span class="text-ink-primary font-medium">ahead</span>
+</div>
+</div>
+<!-- Quiet Meditative Thought -->
+<div class="mt-4 text-center">
+<p class="font-scripture-quote text-scripture-quote text-ink-soft italic">
+      “Your word is a lamp to my feet and a light to my path.”
+    </p>
+<span class="font-label-sm text-label-sm text-ink-soft/70 uppercase tracking-widest mt-1 block">
+      Psalm 119:105
+    </span>
+</div>
+</div>
+<script>
+  // Ensure calendar tab is highlighted in app shell nav
+  (function initCalendarTab() {
+    const navLinks = document.querySelectorAll('nav a[data-path]');
+    navLinks.forEach(link => {
+      const isCal = link.getAttribute('data-path') === 'calendar';
+      const icon = link.querySelector('span.material-symbols-outlined');
+      const indicator = link.querySelector('.indicator');
+
+      if (isCal) {
+        link.classList.add('text-teal-primary', 'font-semibold');
+        link.classList.remove('text-ink-soft');
+        if (icon) {
+          icon.style.fontVariationSettings = "'FILL' 1, 'wght' 600";
+        }
+        if (indicator) {
+          indicator.classList.remove('opacity-0', 'bg-transparent');
+          indicator.classList.add('opacity-100', 'bg-parchment-deep');
+        }
+      } else {
+        link.classList.remove('text-teal-primary', 'font-semibold');
+        link.classList.add('text-ink-soft');
+        if (icon) {
+          icon.style.fontVariationSettings = "'FILL' 0, 'wght' 400";
+        }
+        if (indicator) {
+          indicator.classList.add('opacity-0', 'bg-transparent');
+          indicator.classList.remove('opacity-100', 'bg-parchment-deep');
+        }
+      }
+    });
+  })();
+
+  function switchCalendarView(view) {
+    const monthView = document.getElementById('view-month');
+    const yearView = document.getElementById('view-year');
+    const monthBtn = document.getElementById('tab-month-btn');
+    const yearBtn = document.getElementById('tab-year-btn');
+
+    if (view === 'month') {
+      monthView.classList.remove('hidden');
+      yearView.classList.add('hidden');
+
+      monthBtn.className = 'px-3.5 py-1 rounded-full font-label-md text-label-md transition-all duration-200 bg-teal-primary text-on-primary';
+      yearBtn.className = 'px-3.5 py-1 rounded-full font-label-md text-label-md transition-all duration-200 text-ink-soft hover:text-ink-primary';
+    } else {
+      monthView.classList.add('hidden');
+      yearView.classList.remove('hidden');
+
+      yearBtn.className = 'px-3.5 py-1 rounded-full font-label-md text-label-md transition-all duration-200 bg-teal-primary text-on-primary';
+      monthBtn.className = 'px-3.5 py-1 rounded-full font-label-md text-label-md transition-all duration-200 text-ink-soft hover:text-ink-primary';
+    }
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-parchment-bg/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.03)]" data-active-classes="text-teal-primary font-semibold [&amp;_span.material-symbols-outlined]:[font-variation-settings:'FILL'_1,'wght'_600] [&amp;_.indicator]:bg-parchment-deep [&amp;_.indicator]:opacity-100"><div class="flex items-center justify-around h-16 px-space-xs"><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="home" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">auto_stories</span><span class="font-label-sm text-label-sm tracking-tight">Home</span></a><a aria-current="page" class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl transition-colors text-teal-primary font-semibold [&amp;_span.material-symbols-outlined]:[font-variation-settings:'FILL'_1,'wght'_600] [&amp;_.indicator]:bg-parchment-deep [&amp;_.indicator]:opacity-100" data-path="calendar" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">calendar_month</span><span class="font-label-sm text-label-sm tracking-tight">Calendar</span></a><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="progress" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">donut_large</span><span class="font-label-sm text-label-sm tracking-tight">Progress</span></a><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="badges" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">military_tech</span><span class="font-label-sm text-label-sm tracking-tight">Badges</span></a><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="settings" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">settings</span><span class="font-label-sm text-label-sm tracking-tight">Settings</span></a></div></nav></body></html>

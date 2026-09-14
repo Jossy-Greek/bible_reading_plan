@@ -6,33 +6,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/providers.dart';
 import '../../../app/theme/app_theme.dart';
+import '../../../app/widgets/sanctuary.dart';
 import '../../../core/time/format.dart';
+import '../../../core/verses.dart';
 import '../../../domain/session/reading_session_service.dart';
 import '../../../notifications/reminder_coordinator.dart';
 import '../providers/reading_providers.dart';
 import 'completion_screen.dart';
-
-const _verses = [
-  ('Be still, and know that I am God.', 'Psalm 46:10'),
-  (
-    'Thy word is a lamp unto my feet, and a light unto my path.',
-    'Psalm 119:105',
-  ),
-  (
-    'The grass withereth, the flower fadeth: but the word of our God shall stand for ever.',
-    'Isaiah 40:8',
-  ),
-  ('Let the word of Christ dwell in you richly.', 'Colossians 3:16'),
-  ('Blessed are they that hear the word of God, and keep it.', 'Luke 11:28'),
-  (
-    'Open thou mine eyes, that I may behold wondrous things out of thy law.',
-    'Psalm 119:18',
-  ),
-  (
-    'Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.',
-    'Matthew 4:4',
-  ),
-];
 
 /// The focused reading screen. Nothing here decides anything: the remaining
 /// time comes from `sessionTimingProvider`, which reads timestamps. Leaving
@@ -105,87 +85,242 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
       return _ClockMovedBack(sessionId: session.id);
     }
 
-    final verse = _verses[day.dayIndex % _verses.length];
+    final verse = verseFor(day.dayIndex);
     final done = timing.isComplete;
+    final isToday = day.date == ref.watch(clockProvider).today();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Reading')),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                day.date == ref.watch(clockProvider).today()
-                    ? "Today's Reading"
-                    : 'Reading for ${formatLongDate(day.date)}',
-                style: text.labelLarge,
-              ),
-              const SizedBox(height: 6),
-              Text(day.label, style: text.headlineMedium),
-              const SizedBox(height: 6),
-              Text(
-                'Required time ${formatCountdown(timing.required)}',
-                style: text.bodyMedium?.copyWith(color: AppColors.inkSoft),
-              ),
-              const Spacer(),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      done ? '✓' : formatCountdown(timing.remaining),
-                      style: text.displayLarge?.copyWith(
-                        fontWeight: FontWeight.w300,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                        color: done ? AppColors.success : AppColors.ink,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      done ? 'Reading time completed' : 'remaining',
-                      style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 28),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: LinearProgressIndicator(
-                  value: timing.progress,
-                  minHeight: 6,
-                  backgroundColor: AppColors.parchmentDeep,
-                  color: done ? AppColors.success : AppColors.teal,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '“${verse.$1}”',
-                textAlign: TextAlign.center,
-                style: text.titleMedium?.copyWith(
-                  fontStyle: FontStyle.italic,
-                  color: AppColors.inkSoft,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                verse.$2,
-                textAlign: TextAlign.center,
-                style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
-              ),
-              const Spacer(),
-              FilledButton(
-                onPressed: done && !_completing ? _complete : null,
-                child: Text(
-                  done
-                      ? (_completing ? 'Saving…' : 'Mark as Done ✓')
-                      : 'Keep reading — ${formatCountdown(timing.remaining)}',
-                ),
-              ),
-            ],
+      appBar: SanctuaryAppBar(
+        title: 'Reading Session',
+        overline: isToday ? 'Today' : formatLongDate(day.date),
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: const Icon(Icons.arrow_back),
+          style: IconButton.styleFrom(
+            backgroundColor: AppColors.parchmentDeep,
+            foregroundColor: AppColors.ink,
           ),
         ),
+        showStreak: false,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+              children: [
+                // What is being read.
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: done
+                                ? AppColors.success.withValues(alpha: 0.15)
+                                : AppColors.parchmentDeep,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: done
+                                      ? AppColors.success
+                                      : AppColors.teal,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Overline(
+                                done
+                                    ? 'Reading time completed'
+                                    : 'Session in progress',
+                                color: done ? AppColors.success : AppColors.ink,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Overline(
+                          isToday
+                              ? "Today's Reading"
+                              : 'Reading for ${formatLongDate(day.date)}',
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          day.label,
+                          textAlign: TextAlign.center,
+                          style: text.headlineLarge,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.schedule,
+                              size: 18,
+                              color: AppColors.inkSoft,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Required time ${formatCountdown(timing.required)}',
+                              style: text.bodyLarge?.copyWith(
+                                color: AppColors.inkSoft,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // The countdown.
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 36, 24, 28),
+                    child: Column(
+                      children: [
+                        Text(
+                          done ? '✓' : formatCountdown(timing.remaining),
+                          style: text.displayLarge?.copyWith(
+                            fontSize: 72,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                            color: done ? AppColors.success : AppColors.ink,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Overline(done ? 'Complete' : 'Remaining'),
+                        const SizedBox(height: 28),
+                        ThinBar(
+                          timing.progress,
+                          color: done ? AppColors.success : AppColors.teal,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Text(
+                              '${formatCountdown(timing.elapsed)} elapsed',
+                              style: text.bodyMedium?.copyWith(
+                                color: AppColors.inkSoft,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '${(timing.progress * 100).round()}% read',
+                              style: text.bodyMedium?.copyWith(
+                                color: AppColors.inkSoft,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+                        Text(
+                          '❝',
+                          style: text.titleLarge?.copyWith(
+                            color: AppColors.gold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          verse.text,
+                          textAlign: TextAlign.center,
+                          style: text.titleLarge?.copyWith(
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w400,
+                            height: 1.45,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Overline('— ${verse.ref}'),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Why the phone can be put down.
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.parchmentDeep.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const IconWell(
+                        Icons.menu_book_outlined,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Reading a paper Bible?',
+                              style: text.titleSmall,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Set the phone down. The timer keeps counting '
+                              'while the screen is off, and picks up exactly '
+                              'where it was when you return.',
+                              style: text.bodyMedium?.copyWith(
+                                color: AppColors.inkSoft,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Pinned action.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+            child: Column(
+              children: [
+                FilledButton.icon(
+                  style: kTimerButtonStyle,
+                  onPressed: done && !_completing ? _complete : null,
+                  icon: Icon(
+                    done ? Icons.check_rounded : Icons.hourglass_top_rounded,
+                  ),
+                  label: Text(
+                    done
+                        ? (_completing ? 'Saving…' : 'Mark as Done ✓')
+                        : 'Keep reading — ${formatCountdown(timing.remaining)}',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  done
+                      ? 'Well done. Mark it and the day is yours.'
+                      : '✦ Mark as Done unlocks at 0:00',
+                  style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

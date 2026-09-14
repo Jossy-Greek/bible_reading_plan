@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/providers.dart';
 import '../../../app/theme/app_theme.dart';
+import '../../../app/widgets/sanctuary.dart';
 import '../../../core/time/format.dart';
 import '../../../domain/reading_time/reading_time_service.dart';
 import '../../../notifications/reminder_coordinator.dart';
@@ -34,7 +35,7 @@ class SettingsScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: const SanctuaryAppBar(title: 'Settings', showProfile: false),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 32),
         children: [
@@ -136,6 +137,19 @@ class SettingsScreen extends ConsumerWidget {
                   ],
                 ],
                 const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.notifications_active_outlined),
+                  title: const Text('Send a test notification'),
+                  subtitle: const Text(
+                    'Appears right away if notifications can reach you',
+                  ),
+                  onTap: () async {
+                    await ref.read(notificationServiceProvider).showTestNow();
+                    ref.read(settingsRevisionProvider.notifier).bump();
+                  },
+                ),
+                const Divider(height: 1),
+                _ScheduledReadout(),
                 _PermissionNote(),
               ],
             ),
@@ -430,6 +444,38 @@ class _PermissionNote extends ConsumerWidget {
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(color: AppColors.missed),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// What is actually pending on the device, so "nothing arrived" can be told
+/// apart from "nothing was ever scheduled".
+class _ScheduledReadout extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(settingsRevisionProvider);
+    final text = Theme.of(context).textTheme;
+    return FutureBuilder(
+      future: ref.read(notificationServiceProvider).pending(),
+      builder: (context, snap) {
+        final pending = snap.data;
+        final String line;
+        if (pending == null) {
+          line = 'Checking scheduled reminders…';
+        } else if (pending.isEmpty) {
+          line = 'Nothing is scheduled on this device.';
+        } else {
+          line =
+              'Scheduled on this device: ${pending.map((p) => p.title ?? '#${p.id}').join(' · ')}';
+        }
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+          child: Text(
+            line,
+            style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
           ),
         );
       },

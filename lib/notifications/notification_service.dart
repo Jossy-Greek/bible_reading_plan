@@ -124,6 +124,25 @@ class NotificationService {
     }
   }
 
+  /// Fires one notification immediately. The diagnostic that separates "the
+  /// OS will not show us anything" (permission, channel, plugin) from "the
+  /// schedule is wrong" — the two look identical from the outside.
+  Future<void> showTestNow() async {
+    await init();
+    await _plugin.show(
+      id: 99,
+      title: 'Bible Reading Plan',
+      body: 'Reminders are working. 📖',
+      notificationDetails: _details,
+    );
+  }
+
+  /// What the OS is currently holding for us, by id.
+  Future<List<PendingNotificationRequest>> pending() async {
+    await init();
+    return _plugin.pendingNotificationRequests();
+  }
+
   Future<void> cancelAll() async {
     await init();
     await _plugin.cancelAll();

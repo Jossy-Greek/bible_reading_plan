@@ -31,3 +31,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # Plus Jakarta Sans, bundled so the app stays offline. Variable fonts: the
+  # single file carries every weight, Flutter picks the axis from FontWeight.
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-VF.ttf
+        - asset: assets/fonts/PlusJakartaSans-Italic-VF.ttf
+          style: italic

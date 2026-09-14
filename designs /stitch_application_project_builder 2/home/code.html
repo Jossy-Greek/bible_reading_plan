@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#FBF8F1;color:#1F3A3D;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;vertical-align:middle;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: 'class', theme: { extend: { colors: { 'primary-fixed-dim': '#a0cfd4', 'on-primary-fixed-variant': '#1e4d52', 'surface-container': '#d6f3f7', 'on-tertiary-fixed-variant': '#5d4202', 'surface': '#eafdff', 'inverse-on-surface': '#d9f6fa', 'on-secondary-fixed': '#071f21', 'outline-variant': '#c0c8c9', 'surface-variant': '#cbe8eb', 'on-background': '#021f22', 'on-primary': '#ffffff', 'surface-container-highest': '#cbe8eb', 'on-tertiary': '#ffffff', 'on-secondary-container': '#51686a', 'surface-bright': '#eafdff', 'on-surface-variant': '#404849', 'teal-primary': '#2F5D62', 'primary-container': '#2f5d62', 'parchment-deep': '#F1EBDD', 'inverse-surface': '#193437', 'on-primary-fixed': '#002023', 'on-tertiary-container': '#eec67c', 'surface-card': '#FFFFFF', 'success-green': '#4E7D5B', 'surface-container-high': '#d0eef1', 'secondary-fixed-dim': '#b2cbcd', 'tertiary': '#533a00', 'error-container': '#ffdad6', 'outline': '#707979', 'ink-primary': '#1F3A3D', 'primary': '#14454a', 'ink-soft': '#52696B', 'surface-container-lowest': '#ffffff', 'on-error-container': '#93000a', 'on-primary-container': '#a5d4da', 'on-secondary': '#ffffff', 'error': '#ba1a1a', 'surface-dim': '#c2dfe3', 'inverse-primary': '#a0cfd4', 'parchment-bg': '#FBF8F1', 'primary-fixed': '#bbebf1', 'secondary': '#4c6264', 'tertiary-fixed-dim': '#e9c178', 'tertiary-container': '#6e5112', 'secondary-container': '#cee7e9', 'missed-red': '#C77B6A', 'surface-container-low': '#dbf9fd', 'surface-tint': '#38656a', 'on-error': '#ffffff', 'on-surface': '#021f22', 'secondary-fixed': '#cee7e9', 'tertiary-fixed': '#ffdea5', 'background': '#eafdff', 'gold-accent': '#C6A15B', 'on-tertiary-fixed': '#271900', 'on-secondary-fixed-variant': '#344b4d' }, borderRadius: { 'DEFAULT': '0.25rem', 'lg': '0.5rem', 'xl': '0.75rem', 'full': '9999px' }, spacing: { 'space-sm': '0.5rem', 'space-xl': '2rem', 'space-xs': '0.25rem', 'space-md': '1rem', 'space-lg': '1.5rem', 'gutter': '1rem', 'margin': '1.25rem' }, fontFamily: { 'body-md': ['Plus Jakarta Sans'], 'scripture-quote': ['Plus Jakarta Sans'], 'label-lg': ['Plus Jakarta Sans'], 'label-md': ['Plus Jakarta Sans'], 'display-countdown': ['Plus Jakarta Sans'], 'headline-lg': ['Plus Jakarta Sans'], 'headline-md': ['Plus Jakarta Sans'], 'title-lg': ['Plus Jakarta Sans'], 'title-md': ['Plus Jakarta Sans'], 'label-sm': ['Plus Jakarta Sans'], 'body-lg': ['Plus Jakarta Sans'], 'display-countdown-mobile': ['Plus Jakarta Sans'] }, fontSize: { 'body-md': ['15px', { lineHeight: '22px', fontWeight: '400' }], 'scripture-quote': ['16px', { lineHeight: '26px', letterSpacing: '0.01em', fontWeight: '400' }], 'label-lg': ['17px', { lineHeight: '22px', fontWeight: '600' }], 'label-md': ['13px', { lineHeight: '18px', letterSpacing: '0.04em', fontWeight: '600' }], 'display-countdown': ['64px', { lineHeight: '72px', letterSpacing: '-0.03em', fontWeight: '300' }], 'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '600' }], 'headline-md': ['24px', { lineHeight: '32px', letterSpacing: '0em', fontWeight: '600' }], 'title-lg': ['20px', { lineHeight: '28px', fontWeight: '600' }], 'title-md': ['18px', { lineHeight: '24px', fontWeight: '600' }], 'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '500' }], 'body-lg': ['17px', { lineHeight: '26px', fontWeight: '400' }], 'display-countdown-mobile': ['56px', { lineHeight: '64px', letterSpacing: '-0.02em', fontWeight: '300' }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-parchment-bg text-ink-primary font-body-md text-body-md flex flex-col min-h-screen antialiased selection:bg-teal-primary/20 selection:text-ink-primary"><header class="fixed top-0 w-full z-50 bg-parchment-bg/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Bible Reading Plan Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVWayM0fckQdf_TPfLJ_UvMuDR9y3l3Gf9MYWgtx1m8SJqvvGUFtLp6u9T7qI8tDLO7NyujixtgnllR8RaaXealWdZ17eWwXJrbRsTkHGaJ7PSHqja9Mubs5hhA4qjnWIabMsJLHijDDPPhtiZ3DVOLbxLgY1NNCn_gZjCbHWXbPHugaDX3pQ5f7SNS8MhXCbhDOXSiPWgiIdUfwiC3fGEFnlisCXty2PvrF2tQsFo7HtPH-B-x9ePXujt"/><div class="flex flex-col"><span class="font-label-sm text-label-sm uppercase tracking-wider text-ink-soft">Sanctuary Plan</span><h1 class="font-title-md text-title-md text-ink-primary leading-tight line-clamp-1">Home</h1></div></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1 bg-parchment-deep px-2.5 py-1 rounded-full text-ink-primary"><span class="text-sm leading-none">🔥</span><span class="font-label-md text-label-md text-ink-primary font-semibold">14</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-parchment-bg"><div class="flex flex-col w-full px-margin space-y-space-lg">
+<!-- Greeting Row -->
+<div class="flex items-center justify-between pt-2">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-ink-soft uppercase tracking-wider">Sanctuary Walk</span>
+<h2 class="font-title-lg text-title-lg text-ink-primary font-semibold tracking-tight">Good morning, Yoseph 👋</h2>
+</div>
+<div class="flex items-center gap-1.5 bg-parchment-deep px-3.5 py-1.5 rounded-full">
+<span class="text-sm leading-none select-none">🔥</span>
+<span class="font-label-md text-label-md text-ink-primary font-semibold">7</span>
+</div>
+</div>
+<!-- Today's Reading Card -->
+<div class="bg-surface-card rounded-[20px] p-6 flex flex-col relative overflow-hidden transition-all duration-300">
+<!-- Subtle Parchment Corner Watermark Accent -->
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-parchment-deep/40 pointer-events-none -z-0"></div>
+<div class="relative z-10 flex flex-col space-y-space-md">
+<!-- Category Tag & Chapter Count Indicator -->
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-ink-soft font-semibold">Today's Reading</span>
+<span class="bg-parchment-deep text-ink-soft font-label-sm text-label-sm px-2.5 py-0.5 rounded-full">Canonical Plan</span>
+</div>
+<!-- Passage Headline -->
+<div class="space-y-1">
+<h3 class="text-[28px] leading-[34px] font-semibold text-ink-primary tracking-tight">Genesis 1–4</h3>
+<p class="font-body-md text-body-md text-ink-soft">Day 1 of 365 · 16 min · 111 verses</p>
+</div>
+<!-- Progress Section -->
+<div class="space-y-2 pt-1">
+<div class="flex justify-between items-center text-ink-soft font-label-md text-label-md">
+<span id="chapter-progress-label">0 / 4 chapters completed</span>
+<span class="font-semibold text-teal-primary" id="chapter-progress-pct">0%</span>
+</div>
+<!-- Progress Bar Track -->
+<div class="w-full h-1.5 bg-parchment-deep rounded-full overflow-hidden">
+<div class="h-full bg-teal-primary rounded-full transition-all duration-500 w-0" id="progress-indicator"></div>
+</div>
+</div>
+<!-- Reading Highlights Preview / Tactile Pill Selectors -->
+<div class="grid grid-cols-4 gap-2 pt-1">
+<button class="h-10 rounded-xl bg-parchment-deep text-ink-primary font-label-md text-label-md flex items-center justify-center transition-colors hover:bg-parchment-deep/80" id="chap-btn-1" onclick="toggleChapter(1)" type="button">
+          Ch 1
+        </button>
+<button class="h-10 rounded-xl bg-parchment-deep text-ink-primary font-label-md text-label-md flex items-center justify-center transition-colors hover:bg-parchment-deep/80" id="chap-btn-2" onclick="toggleChapter(2)" type="button">
+          Ch 2
+        </button>
+<button class="h-10 rounded-xl bg-parchment-deep text-ink-primary font-label-md text-label-md flex items-center justify-center transition-colors hover:bg-parchment-deep/80" id="chap-btn-3" onclick="toggleChapter(3)" type="button">
+          Ch 3
+        </button>
+<button class="h-10 rounded-xl bg-parchment-deep text-ink-primary font-label-md text-label-md flex items-center justify-center transition-colors hover:bg-parchment-deep/80" id="chap-btn-4" onclick="toggleChapter(4)" type="button">
+          Ch 4
+        </button>
+</div>
+<!-- Primary Action CTA -->
+<div class="pt-2">
+<button class="w-full h-14 bg-teal-primary text-on-primary rounded-[16px] font-label-lg text-label-lg flex items-center justify-center gap-2 transition-transform active:scale-[0.98]" id="start-reading-btn" type="button">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span id="cta-label">Start Reading</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quiet Spiritual Touch & Daily Verse Card -->
+<div class="bg-surface-card rounded-[20px] p-6 flex flex-col space-y-space-sm relative overflow-hidden">
+<div class="flex items-center gap-2 text-ink-soft">
+<span class="material-symbols-outlined text-[18px] text-gold-accent" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-medium">Morning Meditation</span>
+</div>
+<blockquote class="font-scripture-quote text-scripture-quote text-ink-primary italic pt-1 leading-relaxed">
+      "In the beginning, God created the heavens and the earth. The earth was without form and void, and darkness was over the face of the deep."
+    </blockquote>
+<div class="flex items-center justify-between pt-2">
+<span class="font-label-md text-label-md font-semibold text-ink-soft">Genesis 1:1–2</span>
+<button class="text-teal-primary font-label-sm text-label-sm flex items-center gap-0.5 hover:opacity-80 transition-opacity" type="button">
+<span>Reflect</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Tomorrow's Passage Card -->
+<div class="bg-parchment-deep/60 rounded-[20px] p-5 flex items-center justify-between">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-full bg-surface-card flex items-center justify-center text-teal-primary">
+<span class="material-symbols-outlined text-[20px]">upcoming</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-ink-soft font-semibold">Tomorrow's Passage</span>
+<span class="font-title-md text-title-md text-ink-primary font-semibold">Genesis 5–8</span>
+</div>
+</div>
+<div class="flex items-center text-ink-soft font-label-sm text-label-sm bg-surface-card px-3 py-1.5 rounded-full">
+<span>~15 min</span>
+</div>
+</div>
+<!-- Visual Journaling & Sanctuary Mood -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div class="bg-surface-card rounded-[16px] p-4 flex flex-col justify-between h-32">
+<div class="w-8 h-8 rounded-full bg-parchment-deep flex items-center justify-center text-teal-primary">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-ink-soft block">Journal</span>
+<span class="font-label-md text-label-md text-ink-primary font-semibold">Capture thoughts</span>
+</div>
+</div>
+<div class="bg-surface-card rounded-[16px] p-4 flex flex-col justify-between h-32">
+<div class="w-8 h-8 rounded-full bg-parchment-deep flex items-center justify-center text-teal-primary">
+<span class="material-symbols-outlined text-[18px]">headphones</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-ink-soft block">Audio Bible</span>
+<span class="font-label-md text-label-md text-ink-primary font-semibold">Dramatized ESV</span>
+</div>
+</div>
+</div>
+<!-- Micro-interaction Logic -->
+<script>
+    (function() {
+      const completedChapters = new Set();
+      const totalChapters = 4;
+
+      window.toggleChapter = function(chapterNum) {
+        const btn = document.getElementById('chap-btn-' + chapterNum);
+        const progressIndicator = document.getElementById('progress-indicator');
+        const progressLabel = document.getElementById('chapter-progress-label');
+        const progressPct = document.getElementById('chapter-progress-pct');
+        const ctaLabel = document.getElementById('cta-label');
+
+        if (completedChapters.has(chapterNum)) {
+          completedChapters.delete(chapterNum);
+          btn.className = 'h-10 rounded-xl bg-parchment-deep text-ink-primary font-label-md text-label-md flex items-center justify-center transition-colors hover:bg-parchment-deep/80';
+        } else {
+          completedChapters.add(chapterNum);
+          btn.className = 'h-10 rounded-xl bg-teal-primary text-on-primary font-label-md text-label-md flex items-center justify-center transition-colors shadow-sm';
+        }
+
+        const count = completedChapters.size;
+        const percentage = Math.round((count / totalChapters) * 100);
+
+        progressIndicator.style.width = percentage + '%';
+        progressPct.textContent = percentage + '%';
+        progressLabel.textContent = count + ' / ' + totalChapters + ' chapters completed';
+
+        if (count === totalChapters) {
+          ctaLabel.textContent = "Review Session";
+        } else if (count > 0) {
+          ctaLabel.textContent = "Continue Reading";
+        } else {
+          ctaLabel.textContent = "Start Reading";
+        }
+      };
+    })();
+  </script>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-parchment-bg/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.03)]" data-active-classes="text-teal-primary font-semibold [&amp;_span.material-symbols-outlined]:[font-variation-settings:'FILL'_1,'wght'_600] [&amp;_.indicator]:bg-parchment-deep [&amp;_.indicator]:opacity-100"><div class="flex items-center justify-around h-16 px-space-xs"><a aria-current="page" class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl transition-colors text-teal-primary font-semibold [&amp;_span.material-symbols-outlined]:[font-variation-settings:'FILL'_1,'wght'_600] [&amp;_.indicator]:bg-parchment-deep [&amp;_.indicator]:opacity-100" data-path="home" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">auto_stories</span><span class="font-label-sm text-label-sm tracking-tight">Home</span></a><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="calendar" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">calendar_month</span><span class="font-label-sm text-label-sm tracking-tight">Calendar</span></a><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="progress" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">donut_large</span><span class="font-label-sm text-label-sm tracking-tight">Progress</span></a><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="badges" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">military_tech</span><span class="font-label-sm text-label-sm tracking-tight">Badges</span></a><a class="group relative flex flex-col items-center justify-center min-w-[56px] h-12 py-1 px-2 rounded-xl text-ink-soft hover:text-ink-primary transition-colors" data-path="settings" href="#"><div class="indicator absolute inset-x-2 inset-y-1 rounded-xl -z-10 bg-transparent opacity-0 transition-all duration-200"></div><span class="material-symbols-outlined text-[24px] mb-0.5 transition-transform duration-150">settings</span><span class="font-label-sm text-label-sm tracking-tight">Settings</span></a></div></nav></body></html>

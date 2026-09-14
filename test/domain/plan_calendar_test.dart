@@ -44,6 +44,17 @@ void main() {
     expect(c.canRead(start.plusDays(3)), isFalse);
   });
 
+  test('month pace: completed, missed, remaining, share of elapsed', () {
+    // Sept 1–30 scheduled; today the 9th; days 1–4 and 6–8 done, the 5th missed.
+    final c = cal({0, 1, 2, 3, 5, 6, 7}, const LocalDate(2026, 9, 9));
+    final m = c.monthStats(2026, 9);
+    expect(m.completed, 7);
+    expect(m.missed, 1);
+    expect(m.remaining, 22); // the 9th (today, pending) through the 30th
+    expect(m.pace, closeTo(7 / 8, 1e-9));
+    expect(c.monthStats(2026, 8).pace, isNull);
+  });
+
   test('counts', () {
     final c = cal({0, 2}, start.plusDays(5));
     expect(c.completedCount, 2);

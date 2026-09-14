@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#FBF8F1;color:#1F3A3D;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;vertical-align:middle;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: 'class', theme: { extend: { colors: { 'primary-fixed-dim': '#a0cfd4', 'on-primary-fixed-variant': '#1e4d52', 'surface-container': '#d6f3f7', 'on-tertiary-fixed-variant': '#5d4202', 'surface': '#eafdff', 'inverse-on-surface': '#d9f6fa', 'on-secondary-fixed': '#071f21', 'outline-variant': '#c0c8c9', 'surface-variant': '#cbe8eb', 'on-background': '#021f22', 'on-primary': '#ffffff', 'surface-container-highest': '#cbe8eb', 'on-tertiary': '#ffffff', 'on-secondary-container': '#51686a', 'surface-bright': '#eafdff', 'on-surface-variant': '#404849', 'teal-primary': '#2F5D62', 'primary-container': '#2f5d62', 'parchment-deep': '#F1EBDD', 'inverse-surface': '#193437', 'on-primary-fixed': '#002023', 'on-tertiary-container': '#eec67c', 'surface-card': '#FFFFFF', 'success-green': '#4E7D5B', 'surface-container-high': '#d0eef1', 'secondary-fixed-dim': '#b2cbcd', 'tertiary': '#533a00', 'error-container': '#ffdad6', 'outline': '#707979', 'ink-primary': '#1F3A3D', 'primary': '#14454a', 'ink-soft': '#52696B', 'surface-container-lowest': '#ffffff', 'on-error-container': '#93000a', 'on-primary-container': '#a5d4da', 'on-secondary': '#ffffff', 'error': '#ba1a1a', 'surface-dim': '#c2dfe3', 'inverse-primary': '#a0cfd4', 'parchment-bg': '#FBF8F1', 'primary-fixed': '#bbebf1', 'secondary': '#4c6264', 'tertiary-fixed-dim': '#e9c178', 'tertiary-container': '#6e5112', 'secondary-container': '#cee7e9', 'missed-red': '#C77B6A', 'surface-container-low': '#dbf9fd', 'surface-tint': '#38656a', 'on-error': '#ffffff', 'on-surface': '#021f22', 'secondary-fixed': '#cee7e9', 'tertiary-fixed': '#ffdea5', 'background': '#eafdff', 'gold-accent': '#C6A15B', 'on-tertiary-fixed': '#271900', 'on-secondary-fixed-variant': '#344b4d' }, borderRadius: { 'DEFAULT': '0.25rem', 'lg': '0.5rem', 'xl': '0.75rem', 'full': '9999px' }, spacing: { 'space-sm': '0.5rem', 'space-xl': '2rem', 'space-xs': '0.25rem', 'space-md': '1rem', 'space-lg': '1.5rem', 'gutter': '1rem', 'margin': '1.25rem' }, fontFamily: { 'body-md': ['Plus Jakarta Sans'], 'scripture-quote': ['Plus Jakarta Sans'], 'label-lg': ['Plus Jakarta Sans'], 'label-md': ['Plus Jakarta Sans'], 'display-countdown': ['Plus Jakarta Sans'], 'headline-lg': ['Plus Jakarta Sans'], 'headline-md': ['Plus Jakarta Sans'], 'title-lg': ['Plus Jakarta Sans'], 'title-md': ['Plus Jakarta Sans'], 'label-sm': ['Plus Jakarta Sans'], 'body-lg': ['Plus Jakarta Sans'], 'display-countdown-mobile': ['Plus Jakarta Sans'] }, fontSize: { 'body-md': ['15px', { lineHeight: '22px', fontWeight: '400' }], 'scripture-quote': ['16px', { lineHeight: '26px', letterSpacing: '0.01em', fontWeight: '400' }], 'label-lg': ['17px', { lineHeight: '22px', fontWeight: '600' }], 'label-md': ['13px', { lineHeight: '18px', letterSpacing: '0.04em', fontWeight: '600' }], 'display-countdown': ['64px', { lineHeight: '72px', letterSpacing: '-0.03em', fontWeight: '300' }], 'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '600' }], 'headline-md': ['24px', { lineHeight: '32px', letterSpacing: '0em', fontWeight: '600' }], 'title-lg': ['20px', { lineHeight: '28px', fontWeight: '600' }], 'title-md': ['18px', { lineHeight: '24px', fontWeight: '600' }], 'label-sm': ['11px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '500' }], 'body-lg': ['17px', { lineHeight: '26px', fontWeight: '400' }], 'display-countdown-mobile': ['56px', { lineHeight: '64px', letterSpacing: '-0.02em', fontWeight: '300' }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-parchment-bg text-ink-primary font-body-md text-body-md flex flex-col min-h-screen antialiased selection:bg-teal-primary/20 selection:text-ink-primary"><header class="fixed top-0 w-full z-50 bg-parchment-bg/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-space-sm flex items-center justify-between"><div class="flex items-center gap-space-xs"><button aria-label="Go back" class="w-11 h-11 flex items-center justify-center rounded-full text-ink-primary hover:bg-parchment-deep transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><img alt="Bible Reading Plan Emblem" class="h-8 w-auto object-contain ml-1" src="https://lh3.googleusercontent.com/aida/AEtjO1VVWayM0fckQdf_TPfLJ_UvMuDR9y3l3Gf9MYWgtx1m8SJqvvGUFtLp6u9T7qI8tDLO7NyujixtgnllR8RaaXealWdZ17eWwXJrbRsTkHGaJ7PSHqja9Mubs5hhA4qjnWIabMsJLHijDDPPhtiZ3DVOLbxLgY1NNCn_gZjCbHWXbPHugaDX3pQ5f7SNS8MhXCbhDOXSiPWgiIdUfwiC3fGEFnlisCXty2PvrF2tQsFo7HtPH-B-x9ePXujt"/><h1 class="font-title-md text-title-md text-ink-primary line-clamp-1 ml-1">Reading Session</h1></div><div class="flex items-center gap-space-sm pr-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-safe bg-parchment-bg"><div class="flex flex-col w-full px-margin pb-space-xl">
+<!-- Status & Session Overview Card -->
+<div class="w-full bg-surface-card rounded-[20px] p-space-lg mb-space-lg flex flex-col items-center text-center">
+<div class="flex items-center gap-space-xs px-space-sm py-1 bg-parchment-deep rounded-full mb-space-md">
+<span class="w-2 h-2 rounded-full bg-teal-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-ink-soft">Session in Progress</span>
+</div>
+<span class="font-label-md text-label-md uppercase tracking-wider text-ink-soft mb-1">Today's Reading</span>
+<h2 class="font-headline-lg text-headline-lg text-ink-primary tracking-tight mb-1">Genesis 1–4</h2>
+<div class="flex items-center gap-1.5 text-ink-soft">
+<span class="material-symbols-outlined text-[16px] text-teal-primary">schedule</span>
+<span class="font-body-md text-body-md">Required time 16:20</span>
+</div>
+</div>
+<!-- Sanctuary Visual Focus Area -->
+<div class="w-full bg-surface-card rounded-[20px] p-space-lg mb-space-lg flex flex-col items-center relative overflow-hidden">
+<!-- Atmospheric subtle gradient glow -->
+<div class="absolute -top-24 -right-24 w-52 h-52 rounded-full bg-teal-primary/5 pointer-events-none blur-3xl"></div>
+<div class="absolute -bottom-24 -left-24 w-52 h-52 rounded-full bg-gold-accent/10 pointer-events-none blur-3xl"></div>
+<!-- Meditative Illustration Placeholder -->
+<div class="w-full h-36 rounded-xl overflow-hidden mb-space-lg relative bg-parchment-deep">
+<img class="w-full h-full object-cover" data-alt="Close up of hands turning open pages of an exquisite cloth-bound linen Bible resting peacefully on a sun-drenched wooden table with morning light, dried olive branch, contemplative stillness, warm parchment tones, deep shadows, cinematic depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADufGyGUG4HNvgAXAbpU8yheJSrjZdtFAp4kPrcLfoQh013NH02RPa1xSjK20rKQYfGxrgYQQUZ4ijRBQNPKyaHZ1_8pja5CbN_BaHHjJ-mQLK2VDow3-4tzazzVXaYclSBPot-YzIZYZdFfJgF_cseEJy9daKW8nBzkecE-PSXCkAIt0FmrsPFF_EU1RMWCi0KhhJKDS4PyiR1CpQTLrTxNUQJIIWe5oLfbLfhlo0-DzuZiUd2MQGpQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-card via-transparent to-transparent"></div>
+</div>
+<!-- Giant Countdown Timer -->
+<div class="flex flex-col items-center justify-center my-space-xs select-none">
+<div class="font-display-countdown-mobile text-display-countdown-mobile text-ink-primary font-light tracking-tighter tabular-nums leading-none" id="display-time">
+        11:42
+      </div>
+<span class="font-label-md text-label-md uppercase tracking-widest text-ink-soft mt-2">remaining</span>
+</div>
+<!-- Thin Linear Progress Gauge -->
+<div class="w-full max-w-xs mt-space-lg mb-space-md">
+<div class="w-full h-[6px] bg-parchment-deep rounded-full overflow-hidden">
+<div class="h-full bg-teal-primary rounded-full transition-all duration-700 ease-out" id="progress-bar-fill" style="width: 29.8%;"></div>
+</div>
+<div class="flex justify-between items-center mt-2 px-1">
+<span class="font-label-sm text-label-sm text-ink-soft">04:38 elapsed</span>
+<span class="font-label-sm text-label-sm text-ink-soft">29% read</span>
+</div>
+</div>
+<!-- Scripture Quote -->
+<div class="w-full pt-space-md pb-space-xs flex flex-col items-center text-center px-space-sm">
+<span class="text-gold-accent font-serif text-3xl leading-none mb-1 select-none">“</span>
+<p class="font-scripture-quote text-scripture-quote italic text-ink-primary max-w-xs leading-relaxed">
+        Be still, and know that I am God.
+      </p>
+<span class="font-label-md text-label-md tracking-wider text-ink-soft mt-2 uppercase">— Psalm 46:10</span>
+</div>
+</div>
+<!-- Contemplative Advice Note -->
+<div class="w-full bg-parchment-deep/70 rounded-[20px] p-space-md mb-space-lg flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-teal-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px] text-teal-primary">menu_book</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-ink-primary">Sanctuary Mode</span>
+<p class="font-body-md text-body-md text-ink-soft mt-0.5 leading-relaxed">
+        Physical Bible reading in progress. The timer ensures unhurried reflection.
+      </p>
+</div>
+</div>
+<!-- Primary CTA Area -->
+<div class="w-full flex flex-col items-center gap-space-sm">
+<button class="w-full h-14 rounded-2xl bg-teal-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 cursor-not-allowed opacity-90 transition-all duration-300" disabled="" id="session-cta">
+<span class="material-symbols-outlined text-[20px]">hourglass_top</span>
+<span id="cta-label">Keep reading — 11:42</span>
+</button>
+<!-- Completion Notice & Manual Debug Demonstration -->
+<div class="flex items-center gap-1.5 text-ink-soft mt-1">
+<span class="material-symbols-outlined text-[15px] text-gold-accent">auto_awesome</span>
+<span class="font-label-sm text-label-sm">Timer marks done automatically at 00:00</span>
+</div>
+<!-- Subtle Dev/Preview Test Trigger -->
+<button class="mt-2 text-ink-soft/70 hover:text-teal-primary font-label-sm text-label-sm underline decoration-dotted transition-colors py-1" id="preview-toggle" type="button">
+      Preview completed state
+    </button>
+</div>
+</div>
+<script>
+  (function() {
+    let totalSeconds = 16 * 60 + 20; // 980s total
+    let currentSeconds = 11 * 60 + 42; // 702s remaining
+    let isCompleted = false;
+
+    const displayTime = document.getElementById('display-time');
+    const progressBar = document.getElementById('progress-bar-fill');
+    const sessionCta = document.getElementById('session-cta');
+    const ctaLabel = document.getElementById('cta-label');
+    const previewToggle = document.getElementById('preview-toggle');
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return m + ':' + s;
+    }
+
+    function updateView() {
+      const timeStr = formatTime(currentSeconds);
+      displayTime.textContent = timeStr;
+      
+      const elapsed = totalSeconds - currentSeconds;
+      const pct = Math.min(100, Math.max(0, (elapsed / totalSeconds) * 100));
+      progressBar.style.width = pct + '%';
+
+      if (currentSeconds <= 0) {
+        setDoneState();
+      } else {
+        ctaLabel.textContent = 'Keep reading — ' + timeStr;
+      }
+    }
+
+    function setDoneState() {
+      isCompleted = true;
+      currentSeconds = 0;
+      displayTime.textContent = '00:00';
+      progressBar.style.width = '100%';
+      progressBar.classList.remove('bg-teal-primary');
+      progressBar.classList.add('bg-success-green');
+
+      sessionCta.disabled = false;
+      sessionCta.classList.remove('cursor-not-allowed', 'opacity-90', 'bg-teal-primary');
+      sessionCta.classList.add('bg-success-green', 'hover:brightness-95', 'active:scale-[0.99]');
+      sessionCta.innerHTML = '<span class="material-symbols-outlined text-[22px]">check_circle</span><span>Complete Session</span>';
+      previewToggle.textContent = 'Reset to active reading';
+    }
+
+    function resetState() {
+      isCompleted = false;
+      currentSeconds = 11 * 60 + 42;
+      progressBar.classList.remove('bg-success-green');
+      progressBar.classList.add('bg-teal-primary');
+
+      sessionCta.disabled = true;
+      sessionCta.classList.add('cursor-not-allowed', 'opacity-90', 'bg-teal-primary');
+      sessionCta.classList.remove('bg-success-green', 'hover:brightness-95', 'active:scale-[0.99]');
+      sessionCta.innerHTML = '<span class="material-symbols-outlined text-[20px]">hourglass_top</span><span id="cta-label">Keep reading — 11:42</span>';
+      previewToggle.textContent = 'Preview completed state';
+      updateView();
+    }
+
+    // Toggle simulated state
+    previewToggle.addEventListener('click', function() {
+      if (!isCompleted) {
+        setDoneState();
+      } else {
+        resetState();
+      }
+    });
+
+    // Real subtle countdown tick for liveliness
+    setInterval(function() {
+      if (!isCompleted && currentSeconds > 0) {
+        currentSeconds -= 1;
+        updateView();
+      }
+    }, 1000);
+  })();
+</script></main></body></html>

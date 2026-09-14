@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers.dart';
 import '../../../app/theme/app_theme.dart';
+import '../../../app/widgets/sanctuary.dart';
 import '../../../core/bible/books.dart';
 import '../../../core/time/format.dart';
 import '../../../domain/progress/bible_progress.dart';
@@ -24,11 +25,14 @@ class ProgressScreen extends ConsumerWidget {
         : ref.watch(streakServiceProvider).displayed(streak, today);
 
     if (p == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        appBar: SanctuaryAppBar(title: 'Progress'),
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Progress')),
+      appBar: const SanctuaryAppBar(title: 'Progress'),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         children: [
@@ -38,39 +42,70 @@ class ProgressScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: 96,
-                    height: 96,
+                    width: 112,
+                    height: 112,
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
                         CircularProgressIndicator(
                           value: p.fraction,
-                          strokeWidth: 9,
+                          strokeWidth: 10,
                           backgroundColor: AppColors.parchmentDeep,
                           color: AppColors.teal,
                           strokeCap: StrokeCap.round,
                         ),
                         Center(
-                          child: Text(p.percentLabel, style: text.titleMedium),
+                          child: Text(
+                            p.percentLabel,
+                            style: text.titleLarge?.copyWith(
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 24),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Bible Progress', style: text.labelLarge),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${_n(p.completedChapters)} / ${_n(p.totalChapters)}',
-                          style: text.headlineSmall,
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.menu_book_outlined,
+                              size: 18,
+                              color: AppColors.teal,
+                            ),
+                            const SizedBox(width: 8),
+                            const Overline('Bible progress'),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: _n(p.completedChapters),
+                                style: text.headlineLarge,
+                              ),
+                              TextSpan(
+                                text: ' /${_n(p.totalChapters)}',
+                                style: text.titleMedium?.copyWith(
+                                  color: AppColors.inkSoft,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         Text(
-                          'chapters',
-                          style: text.bodySmall?.copyWith(
+                          'chapters read',
+                          style: text.bodyMedium?.copyWith(
                             color: AppColors.inkSoft,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -81,55 +116,90 @@ class ProgressScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _TestamentBar(
-            title: 'Old Testament',
-            done: p.oldTestamentCompleted,
-            total: 929,
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  _TestamentBar(
+                    title: 'Old Testament',
+                    done: p.oldTestamentCompleted,
+                    total: 929,
+                  ),
+                  const SizedBox(height: 20),
+                  _TestamentBar(
+                    title: 'New Testament',
+                    done: p.newTestamentCompleted,
+                    total: 260,
+                  ),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 10),
-          _TestamentBar(
-            title: 'New Testament',
-            done: p.newTestamentCompleted,
-            total: 260,
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.9,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 1.6,
             children: [
-              _Stat('Chapters completed', _n(p.completedChapters)),
-              _Stat('Chapters remaining', _n(p.remainingChapters)),
               _Stat(
-                'Days completed',
-                plan == null ? '—' : '${p.daysCompleted} / ${p.totalDays}',
+                Icons.menu_book_outlined,
+                'Chapters completed',
+                _n(p.completedChapters),
               ),
-              _Stat('Current streak', '🔥 $shownStreak'),
-              _Stat('Longest streak', '${streak?.longest ?? 0} days'),
               _Stat(
+                Icons.hourglass_empty_rounded,
+                'Chapters remaining',
+                _n(p.remainingChapters),
+              ),
+              _Stat(
+                Icons.calendar_today_outlined,
+                'Days completed',
+                plan == null ? '—' : '${p.daysCompleted}',
+                suffix: plan == null ? null : '/ ${p.totalDays}',
+              ),
+              _Stat(
+                Icons.local_fire_department_outlined,
+                'Current streak',
+                '🔥 $shownStreak',
+              ),
+              _Stat(
+                Icons.workspace_premium_outlined,
+                'Longest streak',
+                '${streak?.longest ?? 0}',
+                suffix: 'days',
+              ),
+              _Stat(
+                Icons.flag_outlined,
                 'Estimated finish',
                 p.estimatedCompletion == null
                     ? 'Done 🎉'
                     : formatMediumDate(p.estimatedCompletion!),
+                small: true,
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Text('By book', style: text.titleMedium),
-          const SizedBox(height: 8),
+          const SizedBox(height: 28),
+          Text('By book', style: text.headlineSmall),
           for (final t in Testament.values) ...[
             Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 6),
-              child: Text(
-                t.title,
-                style: text.labelLarge?.copyWith(color: AppColors.inkSoft),
+              padding: const EdgeInsets.only(top: 16, bottom: 10),
+              child: Overline(t.title),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+                child: Column(
+                  children: [
+                    for (final b in p.books.where((x) => x.book.testament == t))
+                      _BookRow(b),
+                  ],
+                ),
               ),
             ),
-            for (final b in p.books.where((x) => x.book.testament == t))
-              _BookRow(b),
           ],
         ],
       ),
@@ -160,49 +230,84 @@ class _TestamentBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Text(title, style: text.bodyMedium)),
+            Expanded(child: Text(title, style: text.titleMedium)),
             Text(
               '$done / $total',
-              style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+              style: text.bodyMedium?.copyWith(
+                color: AppColors.inkSoft,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: total == 0 ? 0 : done / total,
-            minHeight: 8,
-            backgroundColor: AppColors.parchmentDeep,
-            color: done >= total ? AppColors.success : AppColors.teal,
-          ),
-        ),
+        const SizedBox(height: 10),
+        ThinBar(total == 0 ? 0 : done / total, height: 8),
       ],
     );
   }
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat(this.label, this.value);
+  const _Stat(
+    this.icon,
+    this.label,
+    this.value, {
+    this.suffix,
+    this.small = false,
+  });
+  final IconData icon;
   final String label;
   final String value;
+  final String? suffix;
+  final bool small;
 
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              label,
-              style: text.labelSmall?.copyWith(color: AppColors.inkSoft),
+            Row(
+              children: [
+                Icon(icon, size: 18, color: AppColors.inkSoft),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: text.bodySmall?.copyWith(
+                      color: AppColors.inkSoft,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
-            Text(value, style: text.titleMedium),
+            const Spacer(),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: value,
+                    style: (small ? text.titleMedium : text.headlineMedium)
+                        ?.copyWith(
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                  ),
+                  if (suffix != null)
+                    TextSpan(
+                      text: ' $suffix',
+                      style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                    ),
+                ],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),
@@ -217,41 +322,46 @@ class _BookRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final started = p.completed > 0;
+    final (IconData icon, Color iconColor, Color well) = p.isDone
+        ? (Icons.check_rounded, Colors.white, AppColors.success)
+        : started
+        ? (Icons.play_arrow_rounded, AppColors.teal, AppColors.parchmentDeep)
+        : (Icons.lock_outline, AppColors.inkSoft, AppColors.parchmentDeep);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
         children: [
-          SizedBox(
-            width: 128,
-            child: Text(
-              p.book.name,
-              style: text.bodyMedium?.copyWith(
-                color: p.isDone ? AppColors.success : AppColors.ink,
+          Row(
+            children: [
+              Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(color: well, shape: BoxShape.circle),
+                child: Icon(icon, size: 16, color: iconColor),
               ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: p.fraction,
-                minHeight: 6,
-                backgroundColor: AppColors.parchmentDeep,
-                color: p.isDone ? AppColors.success : AppColors.teal,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  p.book.name,
+                  style: text.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: started ? AppColors.ink : AppColors.inkSoft,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
+              Text(
+                '${p.completed} / ${p.book.chapters}',
+                style: text.bodyMedium?.copyWith(
+                  color: AppColors.inkSoft,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 10),
-          SizedBox(
-            width: 56,
-            child: Text(
-              '${p.completed}/${p.book.chapters}',
-              textAlign: TextAlign.right,
-              style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
-            ),
-          ),
+          const SizedBox(height: 8),
+          ThinBar(p.fraction),
         ],
       ),
     );

@@ -102,4 +102,62 @@ void main() {
     expect((await plans.activePlan())!.id, p2.id);
     expect(await repo.watchCompletedChapterCount().first, 1);
   });
+
+  test('badges fire through the real completion path', () async {
+    final plan = await PlanRepository(db).startPlan(
+      scope: const WholeBible(),
+      targetDays: 365,
+      startDate: const LocalDate(2026, 9, 1),
+      now: DateTime.utc(2026, 9, 1, 6),
+    );
+    final days = gen.generate(plan, ReadingPace.normal);
+
+    Future<List<String>> complete(int dayIndex, DateTime local) async {
+      final s = await repo.startSession(
+        plan: plan,
+        day: days[dayIndex],
+        nowUtc: local.toUtc(),
+      );
+      final r = await repo.completeDay(
+        plan: plan,
+        day: days[dayIndex],
+        sessionId: s.id,
+        nowUtc: local.toUtc(),
+        nowLocal: local,
+        today: LocalDate.fromDateTime(local),
+        schedule: days,
+      );
+      return r.newBadges.map((b) => b.id).toList();
+    }
+
+    // Day 1 at 05:30 → first reading + early bird.
+    expect(
+      await complete(0, DateTime(2026, 9, 1, 5, 30)),
+      containsAll(['first_reading', 'early_bird']),
+    );
+    // Days 2 and 3 → a 3-day streak.
+    await complete(1, DateTime(2026, 9, 2, 9));
+    expect(await complete(2, DateTime(2026, 9, 3, 9)), contains('streak_3'));
+
+    // Skip the 4th and 5th. Read the 6th on the 6th → back on track.
+    expect(await complete(5, DateTime(2026, 9, 6, 9)), contains('came_back'));
+    // Then go back for the missed 4th → catching up. Not a comeback again.
+    final catchUp = await complete(3, DateTime(2026, 9, 6, 23, 15));
+    expect(catchUp, contains('caught_up'));
+    expect(catchUp, contains('night_owl'));
+    expect(catchUp, isNot(contains('came_back')));
+
+    final earned = (await repo.watchAchievements().first).keys.toSet();
+    expect(earned, {
+      'first_reading',
+      'early_bird',
+      'streak_3',
+      'came_back',
+      'caught_up',
+      'night_owl',
+    });
+    // Streak: 6th counted as a fresh day 1; the catch-up did not move it.
+    expect((await repo.watchStreak().first).current, 1);
+    expect((await repo.watchStreak().first).longest, 3);
+  });
 }

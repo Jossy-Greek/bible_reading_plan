@@ -87,7 +87,7 @@ class _DayCell extends StatelessWidget {
         AppColors.missed,
         '○',
       ),
-      DayStatus.todayPending => (AppColors.parchmentDeep, AppColors.ink, null),
+      DayStatus.todayPending => (AppColors.card, AppColors.ink, '•'),
       DayStatus.future => (Colors.white, AppColors.inkSoft, '—'),
       DayStatus.outsidePlan => (
         Colors.transparent,

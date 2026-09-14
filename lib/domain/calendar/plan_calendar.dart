@@ -62,6 +62,33 @@ class PlanCalendar {
     return s == DayStatus.todayPending || s == DayStatus.missed;
   }
 
+  /// Completed / missed / still-ahead within one calendar month, and the
+  /// share of elapsed scheduled days that were completed (null before any
+  /// have elapsed). "Elapsed" includes today only once it is completed.
+  ({int completed, int missed, int remaining, double? pace}) monthStats(
+    int year,
+    int month,
+  ) {
+    var done = 0, missed = 0, remaining = 0;
+    for (final d in days) {
+      if (d.date.year != year || d.date.month != month) continue;
+      if (isCompleted(d)) {
+        done++;
+      } else if (d.date.isBefore(today)) {
+        missed++;
+      } else {
+        remaining++;
+      }
+    }
+    final elapsed = done + missed;
+    return (
+      completed: done,
+      missed: missed,
+      remaining: remaining,
+      pace: elapsed == 0 ? null : done / elapsed,
+    );
+  }
+
   int get completedCount => completed.length;
   int get missedCount {
     var n = 0;
