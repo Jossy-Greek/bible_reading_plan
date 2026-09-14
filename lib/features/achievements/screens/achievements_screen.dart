@@ -29,17 +29,37 @@ class AchievementsScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 0.95,
-        ),
-        itemCount: kBadges.length,
-        itemBuilder: (_, i) =>
-            _BadgeTile(badge: kBadges[i], unlockedAt: unlocked[kBadges[i].id]),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+        children: [
+          for (final c in BadgeCategory.values) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 10),
+              child: Row(
+                children: [
+                  Expanded(child: Text(c.title, style: text.titleMedium)),
+                  Text(
+                    '${kBadges.where((b) => b.category == c && unlocked.containsKey(b.id)).length}'
+                    ' / ${kBadges.where((b) => b.category == c).length}',
+                    style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+                  ),
+                ],
+              ),
+            ),
+            GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 1.05,
+              children: [
+                for (final b in kBadges.where((b) => b.category == c))
+                  _BadgeTile(badge: b, unlockedAt: unlocked[b.id]),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -60,7 +80,7 @@ class _BadgeTile extends StatelessWidget {
           ? Colors.white
           : AppColors.parchmentDeep.withValues(alpha: 0.6),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -74,6 +94,8 @@ class _BadgeTile extends StatelessWidget {
               style: text.titleSmall?.copyWith(
                 color: earned ? AppColors.ink : AppColors.inkSoft,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
             Text(

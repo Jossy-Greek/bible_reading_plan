@@ -205,8 +205,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             day: day,
             sessionId: session.id,
             nowUtc: clock.nowUtc(),
+            nowLocal: clock.nowLocal(),
             today: clock.today(),
-            totalDays: ref.read(scheduleProvider).value?.length ?? 0,
+            schedule: ref.read(scheduleProvider).value ?? const [],
           );
       // Today is done: the evening nudge must not fire tonight.
       unawaited(ref.read(reminderCoordinatorProvider).refresh());

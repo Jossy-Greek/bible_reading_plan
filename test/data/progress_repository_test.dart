@@ -45,8 +45,9 @@ void main() {
         day: day,
         sessionId: session.id,
         nowUtc: now.add(const Duration(minutes: 20)),
+        nowLocal: DateTime(2026, 9, 14, 11, 20),
         today: start,
-        totalDays: days.length,
+        schedule: days,
       );
       expect(result.streak.current, 1);
       expect(result.newBadges.map((b) => b.id), ['first_reading']);
@@ -62,8 +63,9 @@ void main() {
         day: day,
         sessionId: session.id,
         nowUtc: now.add(const Duration(minutes: 30)),
+        nowLocal: DateTime(2026, 9, 14, 11, 30),
         today: start,
-        totalDays: days.length,
+        schedule: days,
       );
       expect(await repo.watchCompletedChapterCount().first, 4);
       expect((await repo.watchStreak().first).current, 1);
@@ -86,8 +88,9 @@ void main() {
       day: day,
       sessionId: s.id,
       nowUtc: now,
+      nowLocal: DateTime(2026, 9, 14, 11),
       today: start,
-      totalDays: 1,
+      schedule: [day],
     );
 
     final p2 = await plans.startPlan(

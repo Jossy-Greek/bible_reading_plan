@@ -141,8 +141,9 @@ class ProgressRepository {
     required ReadingDay day,
     required int sessionId,
     required DateTime nowUtc,
+    required DateTime nowLocal,
     required LocalDate today,
-    required int totalDays,
+    required List<ReadingDay> schedule,
   }) {
     return _db.transaction(() async {
       await (_db.update(_db.readingSessions)
@@ -187,17 +188,28 @@ class ProgressRepository {
           );
 
       // Badges, from the facts as they now stand inside this transaction.
+      final planDone = await _completedDayIndexesOnce(plan.id);
       final progress = BibleProgress.compute(
         completedByBook: await _completedByBookOnce(),
-        daysCompleted: await _completedDayCountOnce(plan.id),
-        totalDays: totalDays,
+        daysCompleted: planDone.length,
+        totalDays: schedule.length,
         planStart: plan.startDate,
         today: today,
       );
       final unlocked = await _unlockedIdsOnce();
       final newBadges = _achievements.evaluate(
-        progress: progress,
-        streak: after,
+        facts: AchievementFacts(
+          progress: progress,
+          streakBefore: before,
+          streakAfter: after,
+          totalDaysCompleted: await _totalDayCountOnce(),
+          planDaysCompleted: planDone.length,
+          planSchedule: schedule,
+          completedDayIndexes: planDone,
+          completedDay: day,
+          today: today,
+          completedAtLocal: nowLocal,
+        ),
         unlocked: unlocked,
       );
       if (newBadges.isNotEmpty) {
@@ -234,12 +246,15 @@ class ProgressRepository {
     return {for (final r in rows) r.read<String>('book_id'): r.read<int>('n')};
   }
 
-  Future<int> _completedDayCountOnce(int planId) async {
+  Future<Set<int>> _completedDayIndexesOnce(int planId) async {
     final rows = await (_db.select(
       _db.dayCompletions,
     )..where((d) => d.planId.equals(planId))).get();
-    return rows.length;
+    return rows.map((r) => r.dayIndex).toSet();
   }
+
+  Future<int> _totalDayCountOnce() async =>
+      (await _db.select(_db.dayCompletions).get()).length;
 
   // ── streak ─────────────────────────────────────────────────────────────
 

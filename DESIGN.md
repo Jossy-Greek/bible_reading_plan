@@ -166,16 +166,32 @@ displayed current:
 
 Catch-up (completing yesterday's reading today) completes the chapters and the day, and counts as *today's* completion for streak purposes if today's own reading is not yet done; it never resurrects a broken streak. Plan B rest days (book shorter than 7 chapters) are not scheduled days and do not break a streak. Timezone: `today()` derives from the device's local zone at call time; a traveller crossing a date line at most gains or loses one day, and the lazy reset tolerates a single gap of zero (same date twice).
 
-## 9. Badge system — `AchievementService`
+## 9. Badge system — `AchievementService` (expanded 2026-09-14)
 
-```dart
-sealed class BadgeRule {
-  FirstReading(); StreakReached(days); ChaptersReached(n); PercentReached(p);
-  TestamentCompleted(t); BibleCompleted();
-}
-```
+36 badges in six categories, each a `BadgeDefinition` with a rule from a sealed
+set of fourteen kinds. `evaluate(facts, unlocked)` runs inside the completion
+transaction and returns the newly earned list; a badge is never re-awarded.
 
-`evaluate(progress, streak)` runs after every completion inside the same transaction, iterates `kBadges`, unlocks any rule that is satisfied and not yet in `achievements`, and returns the newly unlocked list so the completion screen can celebrate them. Adding a badge is one constant. The twelve badges in the brief map one-to-one onto these six rule types.
+| Category | Badges | Why |
+|---|---|---|
+| Getting going | Getting Started · Early Bird (04:00–07:00) · Night Owl (after 22:00, or before the 04:00 rollover) · Catching Up (read a missed day) · Back on Track (return after ≥2 missed days, having once held a ≥3-day streak) | Early wins in the first sessions; a break reframed as something to come back from, not a failure |
+| Streaks | 3 · 7 · 14 · 30 · 50 · 100 · 365 consecutive days | 7–14 days is where a habit sets; the ladder shows the far target from day one. Keyed off the longest run, so earned for good |
+| Consistency | 30 · 100 · 365 total reading days · Perfect Month (every scheduled day in a calendar month with ≥10 of them) | Counts still climb after a streak breaks |
+| Chapters | 50 · 100 · 250 · 500 · Halfway (595) · 1,000 | Something to earn between streak milestones on a long plan |
+| Books & sections | First Book · Ten Books · Half the Library (33) · The Law · The Histories · Psalms · Wisdom · The Prophets · The Gospels · Paul's Letters | Completion has shape; the canon's own groupings give it names |
+| Milestones | Plan Complete · New Testament · Old Testament · Bible Completed | The top of the ladder |
+
+Facts available to a rule (`AchievementFacts`): Bible progress by book, the
+streak before and after this completion, total days completed across plans,
+the active plan's schedule and completed indexes, the day just completed,
+today, and the local completion time.
+
+Grounding: YouVersion (badges for plan completion and whole-Bible reading;
+streaks as the retention core), Duolingo (streak freezes and comeback
+mechanics; 7-day streaks predict long-term retention), Nike Run Club (first-5K
+to marathon ladder visible from the start), and the general finding that badges
+must mark real milestones and lead with whatever the product most wants to
+drive — here, consecutive days.
 
 ## 10. Notification architecture
 
