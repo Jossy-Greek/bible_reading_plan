@@ -10,6 +10,7 @@ class CompletionArgs {
     required this.streak,
     required this.badgeIds,
     this.isPassage = false,
+    this.catchUpDate,
   });
   final String label;
   final int streak;
@@ -17,6 +18,10 @@ class CompletionArgs {
 
   /// A one-time reading: no streak line, different headline.
   final bool isPassage;
+
+  /// Set when the reading just finished belongs to an earlier day. The
+  /// headline then names that day instead of claiming it was today's.
+  final String? catchUpDate;
 }
 
 class CompletionScreen extends StatelessWidget {
@@ -41,10 +46,20 @@ class CompletionScreen extends StatelessWidget {
               Text(
                 args.isPassage
                     ? 'Reading complete!'
+                    : args.catchUpDate != null
+                    ? 'Caught up!'
                     : "Today's reading is complete!",
                 textAlign: TextAlign.center,
                 style: text.headlineMedium,
               ),
+              if (args.catchUpDate != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  "You finished ${args.catchUpDate}'s reading.",
+                  textAlign: TextAlign.center,
+                  style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                ),
+              ],
               const SizedBox(height: 24),
               if (!args.isPassage)
                 Text(

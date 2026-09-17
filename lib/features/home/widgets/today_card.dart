@@ -160,18 +160,20 @@ class TodayCard extends ConsumerWidget {
                     label: const Text('Continue your open reading'),
                   )
                 else if (timing != null)
+                  // This button *navigates*. It must never claim to complete
+                  // the day — only the reading screen's own button does that.
                   FilledButton.icon(
                     onPressed: () => context.push('/reading'),
                     icon: Icon(
                       timing.isComplete
-                          ? Icons.check_rounded
+                          ? Icons.arrow_forward_rounded
                           : Icons.hourglass_top_rounded,
                     ),
                     label: Text(
                       timing.clockMovedBack
                           ? 'Clock changed — tap to fix'
                           : timing.isComplete
-                          ? 'Mark as Done ✓'
+                          ? 'Finish your reading'
                           : 'Keep reading — ${formatCountdown(timing.remaining)}',
                     ),
                   )

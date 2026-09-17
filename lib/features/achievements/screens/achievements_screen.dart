@@ -17,7 +17,7 @@ class AchievementsScreen extends ConsumerWidget {
     final unlocked = ref.watch(unlockedBadgesProvider).value ?? const {};
     return Scaffold(
       appBar: SanctuaryAppBar(
-        title: 'Achievements',
+        title: 'Badges',
         trailing: [
           Padding(
             padding: const EdgeInsets.only(right: 12),

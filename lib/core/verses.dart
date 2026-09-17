@@ -30,3 +30,9 @@ const List<({String text, String ref})> kVerses = [
 
 ({String text, String ref}) verseFor(int index) =>
     kVerses[index.abs() % kVerses.length];
+
+/// A stable verse for something that has no day index — a one-time reading.
+/// Derived from the text of the key so it does not move between runs
+/// (`String.hashCode` is not stable across processes).
+({String text, String ref}) verseForKey(String key) =>
+    verseFor(key.codeUnits.fold(0, (a, c) => (a * 31 + c) % 100000));

@@ -327,7 +327,7 @@ class _BookRow extends StatelessWidget {
         ? (Icons.check_rounded, Colors.white, AppColors.success)
         : started
         ? (Icons.play_arrow_rounded, AppColors.teal, AppColors.parchmentDeep)
-        : (Icons.lock_outline, AppColors.inkSoft, AppColors.parchmentDeep);
+        : (Icons.circle_outlined, AppColors.inkSoft, AppColors.parchmentDeep);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(

@@ -87,7 +87,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
     }
 
     final passage = ref.watch(sessionPassageProvider);
-    final verse = verseFor(day.dayIndex);
+    final verse = passage == null
+        ? verseFor(day.dayIndex)
+        : verseForKey('${passage.bookId}${passage.fromChapter}');
     final done = timing.isComplete;
     final isToday = day.date == ref.watch(clockProvider).today();
 
@@ -379,6 +381,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             streak: result.streak.current,
             badgeIds: [for (final b in result.newBadges) b.id],
             isPassage: passage != null,
+            catchUpDate: passage == null && day.date != clock.today()
+                ? formatLongDate(day.date)
+                : null,
           ),
         );
       }

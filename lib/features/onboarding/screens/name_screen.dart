@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme/app_theme.dart';
 import '../providers/onboarding_controller.dart';
 
 class NameScreen extends ConsumerStatefulWidget {
@@ -37,7 +38,7 @@ class _NameScreenState extends ConsumerState<NameScreen> {
               const SizedBox(height: 8),
               Text(
                 'Your name stays on this device.',
-                style: text.bodyLarge?.copyWith(color: Colors.black54),
+                style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
               ),
               const SizedBox(height: 32),
               TextField(

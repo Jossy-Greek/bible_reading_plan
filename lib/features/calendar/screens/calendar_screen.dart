@@ -47,14 +47,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               children: [
                 Row(
                   children: [
-                    const Icon(
-                      Icons.calendar_today_outlined,
-                      color: AppColors.teal,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text('Calendar', style: text.headlineSmall),
-                    ),
+                    const Spacer(),
                     SegmentedButton<bool>(
                       showSelectedIcon: false,
                       segments: const [
