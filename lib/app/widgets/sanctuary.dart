@@ -78,6 +78,14 @@ class StreakPill extends ConsumerWidget {
         ? 0
         : ref.watch(streakServiceProvider).displayed(streak, today);
     if (n == 0) return const SizedBox.shrink();
+    return Semantics(
+      label: '$n day reading streak',
+      excludeSemantics: true,
+      child: _pill(context, n),
+    );
+  }
+
+  Widget _pill(BuildContext context, int n) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: compact ? 12 : 14,
@@ -174,6 +182,14 @@ class SanctuaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+/// The height a grid tile needs at the reader's chosen text size.
+///
+/// `childAspectRatio` ties a tile's height to its width, so at 200% font
+/// scale the content overflows and Flutter paints the yellow bars. Passing
+/// this as `mainAxisExtent` instead lets the tile grow with the text.
+double scaledExtent(BuildContext context, double base) =>
+    MediaQuery.textScalerOf(context).scale(base);
+
 /// A small tinted circle with an icon, used as a leading mark in cards.
 class IconWell extends StatelessWidget {
   const IconWell(this.icon, {super.key, this.size = 44, this.color});
@@ -182,14 +198,16 @@ class IconWell extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) => Container(
-    width: size,
-    height: size,
-    decoration: BoxDecoration(
-      color: color ?? context.colors.parchmentDeep,
-      shape: BoxShape.circle,
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color ?? context.colors.parchmentDeep,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: context.colors.teal, size: size * 0.5),
     ),
-    child: Icon(icon, color: context.colors.teal, size: size * 0.5),
   );
 }
 

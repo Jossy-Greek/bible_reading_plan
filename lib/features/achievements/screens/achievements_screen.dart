@@ -47,13 +47,15 @@ class AchievementsScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            GridView.count(
-              crossAxisCount: 2,
+            GridView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 1.05,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                mainAxisExtent: scaledExtent(context, 158),
+              ),
               children: [
                 for (final b in kBadges.where((b) => b.category == c))
                   _BadgeTile(badge: b, unlockedAt: unlocked[b.id]),
@@ -74,8 +76,21 @@ class _BadgeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
     final earned = unlockedAt != null;
+    final earnedOn = earned
+        ? formatMediumDate(LocalDate.fromDateTime(unlockedAt!.toLocal()))
+        : null;
+    return Semantics(
+      label: earned
+          ? '${badge.title}, earned $earnedOn'
+          : '${badge.title}, not yet earned. ${badge.description}',
+      excludeSemantics: true,
+      child: _tile(context, earned, earnedOn),
+    );
+  }
+
+  Widget _tile(BuildContext context, bool earned, String? earnedOn) {
+    final text = Theme.of(context).textTheme;
     return Card(
       color: earned
           ? context.colors.card
@@ -100,9 +115,7 @@ class _BadgeTile extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              earned
-                  ? 'Earned ${formatMediumDate(LocalDate.fromDateTime(unlockedAt!.toLocal()))}'
-                  : badge.description,
+              earned ? 'Earned $earnedOn' : badge.description,
               style: text.bodySmall?.copyWith(color: context.colors.inkSoft),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

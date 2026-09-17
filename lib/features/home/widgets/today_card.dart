@@ -44,9 +44,13 @@ class TodayCard extends ConsumerWidget {
     final multiBook = day.assignments.length > 1;
     final chips = [
       for (final c in day.chapters)
-        multiBook ? '${c.book.abbreviation} ${c.chapter}' : 'Ch ${c.chapter}',
+        (
+          label: multiBook
+              ? '${c.book.abbreviation} ${c.chapter}'
+              : 'Ch ${c.chapter}',
+          spoken: '${c.book.name} chapter ${c.chapter}',
+        ),
     ];
-
     return Card(
       child: Stack(
         children: [
@@ -114,25 +118,29 @@ class TodayCard extends ConsumerWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    for (final label in chips)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: completed
-                              ? context.colors.success
-                              : context.colors.parchmentDeep,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          completed ? '$label ✓' : label,
-                          style: text.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                    for (final chip in chips)
+                      Semantics(
+                        label: completed ? '${chip.spoken}, read' : chip.spoken,
+                        excludeSemantics: true,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
                             color: completed
-                                ? context.colors.onSuccess
-                                : context.colors.ink,
+                                ? context.colors.success
+                                : context.colors.parchmentDeep,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            completed ? '${chip.label} ✓' : chip.label,
+                            style: text.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: completed
+                                  ? context.colors.onSuccess
+                                  : context.colors.ink,
+                            ),
                           ),
                         ),
                       ),

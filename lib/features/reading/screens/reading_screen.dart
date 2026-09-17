@@ -203,14 +203,23 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                     padding: const EdgeInsets.fromLTRB(24, 36, 24, 28),
                     child: Column(
                       children: [
-                        Text(
-                          done ? '✓' : formatCountdown(timing.remaining),
-                          style: text.displayLarge?.copyWith(
-                            fontSize: 72,
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                            color: done
-                                ? context.colors.success
-                                : context.colors.ink,
+                        Semantics(
+                          liveRegion: true,
+                          label: done
+                              ? 'Reading time complete'
+                              : '${formatCountdown(timing.remaining)} remaining',
+                          excludeSemantics: true,
+                          child: Text(
+                            done ? '✓' : formatCountdown(timing.remaining),
+                            style: text.displayLarge?.copyWith(
+                              fontSize: 72,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                              color: done
+                                  ? context.colors.success
+                                  : context.colors.ink,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -244,10 +253,12 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                           ],
                         ),
                         const SizedBox(height: 32),
-                        Text(
-                          '❝',
-                          style: text.titleLarge?.copyWith(
-                            color: context.colors.gold,
+                        ExcludeSemantics(
+                          child: Text(
+                            '❝',
+                            style: text.titleLarge?.copyWith(
+                              color: context.colors.gold,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 4),

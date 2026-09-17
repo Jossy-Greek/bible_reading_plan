@@ -41,30 +41,36 @@ class ProgressScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(24),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 112,
-                    height: 112,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        CircularProgressIndicator(
-                          value: p.fraction,
-                          strokeWidth: 10,
-                          backgroundColor: context.colors.parchmentDeep,
-                          color: context.colors.teal,
-                          strokeCap: StrokeCap.round,
-                        ),
-                        Center(
-                          child: Text(
-                            p.percentLabel,
-                            style: text.titleLarge?.copyWith(
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
+                  Semantics(
+                    label:
+                        '${p.percentLabel} of the Bible read, '
+                        '${p.completedChapters} of ${p.totalChapters} chapters',
+                    excludeSemantics: true,
+                    child: SizedBox(
+                      width: 112,
+                      height: 112,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CircularProgressIndicator(
+                            value: p.fraction,
+                            strokeWidth: 10,
+                            backgroundColor: context.colors.parchmentDeep,
+                            color: context.colors.teal,
+                            strokeCap: StrokeCap.round,
+                          ),
+                          Center(
+                            child: Text(
+                              p.percentLabel,
+                              style: text.titleLarge?.copyWith(
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(width: 24),
@@ -137,13 +143,15 @@ class ProgressScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 16),
-          GridView.count(
-            crossAxisCount: 2,
+          GridView(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 1.6,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              mainAxisExtent: scaledExtent(context, 108),
+            ),
             children: [
               _Stat(
                 Icons.menu_book_outlined,
