@@ -76,6 +76,10 @@ class Streaks extends Table {
   IntColumn get longest => integer().withDefault(const Constant(0))();
   IntColumn get lastCompletedOnEpochDay => integer().nullable()();
 
+  /// The missed day a grace day covered. Also records which calendar month
+  /// has spent its grace — there is one per month.
+  IntColumn get graceUsedOnEpochDay => integer().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -105,7 +109,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.withExecutor(super.e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -121,6 +125,10 @@ class AppDatabase extends _$AppDatabase {
         // v3: a reflection on the sitting, and what was read.
         await m.addColumn(readingSessions, readingSessions.note);
         await m.addColumn(readingSessions, readingSessions.reference);
+      }
+      if (from < 4) {
+        // v4: the grace day that covered a missed day.
+        await m.addColumn(streaks, streaks.graceUsedOnEpochDay);
       }
     },
   );

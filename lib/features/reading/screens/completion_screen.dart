@@ -15,6 +15,7 @@ class CompletionArgs {
     required this.sessionId,
     this.isPassage = false,
     this.catchUpDate,
+    this.graceUsedDate,
   });
   final String label;
   final int streak;
@@ -29,6 +30,9 @@ class CompletionArgs {
   /// Set when the reading just finished belongs to an earlier day. The
   /// headline then names that day instead of claiming it was today's.
   final String? catchUpDate;
+
+  /// Set when this completion spent the month's grace day.
+  final String? graceUsedDate;
 }
 
 class CompletionScreen extends ConsumerStatefulWidget {
@@ -112,6 +116,32 @@ class _CompletionScreenState extends ConsumerState<CompletionScreen> {
                 style: text.titleLarge,
                 semanticsLabel: '${args.streak} day reading streak',
               ),
+            if (args.graceUsedDate != null) ...[
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: c.parchmentDeep.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.shield_outlined, size: 20, color: c.gold),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'A grace day covered ${args.graceUsedDate}, so your '
+                        'streak held. One a month, and it is already yours.',
+                        style: text.bodySmall?.copyWith(color: c.inkSoft),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 12),
             Text(
               '${args.label} ✓',

@@ -20,9 +20,13 @@ class ProgressScreen extends ConsumerWidget {
     final plan = ref.watch(activePlanProvider).value;
     final streak = ref.watch(streakProvider).value;
     final today = ref.watch(clockProvider).today();
-    final shownStreak = streak == null
-        ? 0
-        : ref.watch(streakServiceProvider).displayed(streak, today);
+    final service = ref.watch(streakServiceProvider);
+    final shownStreak = streak == null ? 0 : service.displayed(streak, today);
+    // One missed day a month does not end a run; this says whether it is
+    // still there to spend.
+    final graceAvailable =
+        streak == null || service.graceAvailableFor(streak, today);
+    final reflections = ref.watch(reflectionsProvider).value?.length ?? 0;
 
     if (p == null) {
       return const Scaffold(
@@ -188,6 +192,13 @@ class ProgressScreen extends ConsumerWidget {
                     : formatMediumDate(p.estimatedCompletion!),
                 small: true,
               ),
+              _Stat(
+                Icons.shield_outlined,
+                'Grace day',
+                graceAvailable ? 'Available' : 'Used',
+                small: true,
+              ),
+              _Stat(Icons.edit_note_rounded, 'Reflections', '$reflections'),
             ],
           ),
           const SizedBox(height: 28),

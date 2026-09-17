@@ -1956,12 +1956,23 @@ class $StreaksTable extends Streaks with TableInfo<$StreaksTable, Streak> {
         type: DriftSqlType.int,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _graceUsedOnEpochDayMeta =
+      const VerificationMeta('graceUsedOnEpochDay');
+  @override
+  late final GeneratedColumn<int> graceUsedOnEpochDay = GeneratedColumn<int>(
+    'grace_used_on_epoch_day',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     current,
     longest,
     lastCompletedOnEpochDay,
+    graceUsedOnEpochDay,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1999,6 +2010,15 @@ class $StreaksTable extends Streaks with TableInfo<$StreaksTable, Streak> {
         ),
       );
     }
+    if (data.containsKey('grace_used_on_epoch_day')) {
+      context.handle(
+        _graceUsedOnEpochDayMeta,
+        graceUsedOnEpochDay.isAcceptableOrUnknown(
+          data['grace_used_on_epoch_day']!,
+          _graceUsedOnEpochDayMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2024,6 +2044,10 @@ class $StreaksTable extends Streaks with TableInfo<$StreaksTable, Streak> {
         DriftSqlType.int,
         data['${effectivePrefix}last_completed_on_epoch_day'],
       ),
+      graceUsedOnEpochDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}grace_used_on_epoch_day'],
+      ),
     );
   }
 
@@ -2038,11 +2062,16 @@ class Streak extends DataClass implements Insertable<Streak> {
   final int current;
   final int longest;
   final int? lastCompletedOnEpochDay;
+
+  /// The missed day a grace day covered. Also records which calendar month
+  /// has spent its grace — there is one per month.
+  final int? graceUsedOnEpochDay;
   const Streak({
     required this.id,
     required this.current,
     required this.longest,
     this.lastCompletedOnEpochDay,
+    this.graceUsedOnEpochDay,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2055,6 +2084,9 @@ class Streak extends DataClass implements Insertable<Streak> {
         lastCompletedOnEpochDay,
       );
     }
+    if (!nullToAbsent || graceUsedOnEpochDay != null) {
+      map['grace_used_on_epoch_day'] = Variable<int>(graceUsedOnEpochDay);
+    }
     return map;
   }
 
@@ -2066,6 +2098,9 @@ class Streak extends DataClass implements Insertable<Streak> {
       lastCompletedOnEpochDay: lastCompletedOnEpochDay == null && nullToAbsent
           ? const Value.absent()
           : Value(lastCompletedOnEpochDay),
+      graceUsedOnEpochDay: graceUsedOnEpochDay == null && nullToAbsent
+          ? const Value.absent()
+          : Value(graceUsedOnEpochDay),
     );
   }
 
@@ -2081,6 +2116,9 @@ class Streak extends DataClass implements Insertable<Streak> {
       lastCompletedOnEpochDay: serializer.fromJson<int?>(
         json['lastCompletedOnEpochDay'],
       ),
+      graceUsedOnEpochDay: serializer.fromJson<int?>(
+        json['graceUsedOnEpochDay'],
+      ),
     );
   }
   @override
@@ -2093,6 +2131,7 @@ class Streak extends DataClass implements Insertable<Streak> {
       'lastCompletedOnEpochDay': serializer.toJson<int?>(
         lastCompletedOnEpochDay,
       ),
+      'graceUsedOnEpochDay': serializer.toJson<int?>(graceUsedOnEpochDay),
     };
   }
 
@@ -2101,6 +2140,7 @@ class Streak extends DataClass implements Insertable<Streak> {
     int? current,
     int? longest,
     Value<int?> lastCompletedOnEpochDay = const Value.absent(),
+    Value<int?> graceUsedOnEpochDay = const Value.absent(),
   }) => Streak(
     id: id ?? this.id,
     current: current ?? this.current,
@@ -2108,6 +2148,9 @@ class Streak extends DataClass implements Insertable<Streak> {
     lastCompletedOnEpochDay: lastCompletedOnEpochDay.present
         ? lastCompletedOnEpochDay.value
         : this.lastCompletedOnEpochDay,
+    graceUsedOnEpochDay: graceUsedOnEpochDay.present
+        ? graceUsedOnEpochDay.value
+        : this.graceUsedOnEpochDay,
   );
   Streak copyWithCompanion(StreaksCompanion data) {
     return Streak(
@@ -2117,6 +2160,9 @@ class Streak extends DataClass implements Insertable<Streak> {
       lastCompletedOnEpochDay: data.lastCompletedOnEpochDay.present
           ? data.lastCompletedOnEpochDay.value
           : this.lastCompletedOnEpochDay,
+      graceUsedOnEpochDay: data.graceUsedOnEpochDay.present
+          ? data.graceUsedOnEpochDay.value
+          : this.graceUsedOnEpochDay,
     );
   }
 
@@ -2126,14 +2172,20 @@ class Streak extends DataClass implements Insertable<Streak> {
           ..write('id: $id, ')
           ..write('current: $current, ')
           ..write('longest: $longest, ')
-          ..write('lastCompletedOnEpochDay: $lastCompletedOnEpochDay')
+          ..write('lastCompletedOnEpochDay: $lastCompletedOnEpochDay, ')
+          ..write('graceUsedOnEpochDay: $graceUsedOnEpochDay')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, current, longest, lastCompletedOnEpochDay);
+  int get hashCode => Object.hash(
+    id,
+    current,
+    longest,
+    lastCompletedOnEpochDay,
+    graceUsedOnEpochDay,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2141,7 +2193,8 @@ class Streak extends DataClass implements Insertable<Streak> {
           other.id == this.id &&
           other.current == this.current &&
           other.longest == this.longest &&
-          other.lastCompletedOnEpochDay == this.lastCompletedOnEpochDay);
+          other.lastCompletedOnEpochDay == this.lastCompletedOnEpochDay &&
+          other.graceUsedOnEpochDay == this.graceUsedOnEpochDay);
 }
 
 class StreaksCompanion extends UpdateCompanion<Streak> {
@@ -2149,23 +2202,27 @@ class StreaksCompanion extends UpdateCompanion<Streak> {
   final Value<int> current;
   final Value<int> longest;
   final Value<int?> lastCompletedOnEpochDay;
+  final Value<int?> graceUsedOnEpochDay;
   const StreaksCompanion({
     this.id = const Value.absent(),
     this.current = const Value.absent(),
     this.longest = const Value.absent(),
     this.lastCompletedOnEpochDay = const Value.absent(),
+    this.graceUsedOnEpochDay = const Value.absent(),
   });
   StreaksCompanion.insert({
     this.id = const Value.absent(),
     this.current = const Value.absent(),
     this.longest = const Value.absent(),
     this.lastCompletedOnEpochDay = const Value.absent(),
+    this.graceUsedOnEpochDay = const Value.absent(),
   });
   static Insertable<Streak> custom({
     Expression<int>? id,
     Expression<int>? current,
     Expression<int>? longest,
     Expression<int>? lastCompletedOnEpochDay,
+    Expression<int>? graceUsedOnEpochDay,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2173,6 +2230,8 @@ class StreaksCompanion extends UpdateCompanion<Streak> {
       if (longest != null) 'longest': longest,
       if (lastCompletedOnEpochDay != null)
         'last_completed_on_epoch_day': lastCompletedOnEpochDay,
+      if (graceUsedOnEpochDay != null)
+        'grace_used_on_epoch_day': graceUsedOnEpochDay,
     });
   }
 
@@ -2181,6 +2240,7 @@ class StreaksCompanion extends UpdateCompanion<Streak> {
     Value<int>? current,
     Value<int>? longest,
     Value<int?>? lastCompletedOnEpochDay,
+    Value<int?>? graceUsedOnEpochDay,
   }) {
     return StreaksCompanion(
       id: id ?? this.id,
@@ -2188,6 +2248,7 @@ class StreaksCompanion extends UpdateCompanion<Streak> {
       longest: longest ?? this.longest,
       lastCompletedOnEpochDay:
           lastCompletedOnEpochDay ?? this.lastCompletedOnEpochDay,
+      graceUsedOnEpochDay: graceUsedOnEpochDay ?? this.graceUsedOnEpochDay,
     );
   }
 
@@ -2208,6 +2269,9 @@ class StreaksCompanion extends UpdateCompanion<Streak> {
         lastCompletedOnEpochDay.value,
       );
     }
+    if (graceUsedOnEpochDay.present) {
+      map['grace_used_on_epoch_day'] = Variable<int>(graceUsedOnEpochDay.value);
+    }
     return map;
   }
 
@@ -2217,7 +2281,8 @@ class StreaksCompanion extends UpdateCompanion<Streak> {
           ..write('id: $id, ')
           ..write('current: $current, ')
           ..write('longest: $longest, ')
-          ..write('lastCompletedOnEpochDay: $lastCompletedOnEpochDay')
+          ..write('lastCompletedOnEpochDay: $lastCompletedOnEpochDay, ')
+          ..write('graceUsedOnEpochDay: $graceUsedOnEpochDay')
           ..write(')'))
         .toString();
   }
@@ -3497,6 +3562,7 @@ typedef $$StreaksTableCreateCompanionBuilder =
       Value<int> current,
       Value<int> longest,
       Value<int?> lastCompletedOnEpochDay,
+      Value<int?> graceUsedOnEpochDay,
     });
 typedef $$StreaksTableUpdateCompanionBuilder =
     StreaksCompanion Function({
@@ -3504,6 +3570,7 @@ typedef $$StreaksTableUpdateCompanionBuilder =
       Value<int> current,
       Value<int> longest,
       Value<int?> lastCompletedOnEpochDay,
+      Value<int?> graceUsedOnEpochDay,
     });
 
 class $$StreaksTableFilterComposer
@@ -3532,6 +3599,11 @@ class $$StreaksTableFilterComposer
 
   ColumnFilters<int> get lastCompletedOnEpochDay => $composableBuilder(
     column: $table.lastCompletedOnEpochDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get graceUsedOnEpochDay => $composableBuilder(
+    column: $table.graceUsedOnEpochDay,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -3564,6 +3636,11 @@ class $$StreaksTableOrderingComposer
     column: $table.lastCompletedOnEpochDay,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get graceUsedOnEpochDay => $composableBuilder(
+    column: $table.graceUsedOnEpochDay,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$StreaksTableAnnotationComposer
@@ -3586,6 +3663,11 @@ class $$StreaksTableAnnotationComposer
 
   GeneratedColumn<int> get lastCompletedOnEpochDay => $composableBuilder(
     column: $table.lastCompletedOnEpochDay,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get graceUsedOnEpochDay => $composableBuilder(
+    column: $table.graceUsedOnEpochDay,
     builder: (column) => column,
   );
 }
@@ -3622,11 +3704,13 @@ class $$StreaksTableTableManager
                 Value<int> current = const Value.absent(),
                 Value<int> longest = const Value.absent(),
                 Value<int?> lastCompletedOnEpochDay = const Value.absent(),
+                Value<int?> graceUsedOnEpochDay = const Value.absent(),
               }) => StreaksCompanion(
                 id: id,
                 current: current,
                 longest: longest,
                 lastCompletedOnEpochDay: lastCompletedOnEpochDay,
+                graceUsedOnEpochDay: graceUsedOnEpochDay,
               ),
           createCompanionCallback:
               ({
@@ -3634,11 +3718,13 @@ class $$StreaksTableTableManager
                 Value<int> current = const Value.absent(),
                 Value<int> longest = const Value.absent(),
                 Value<int?> lastCompletedOnEpochDay = const Value.absent(),
+                Value<int?> graceUsedOnEpochDay = const Value.absent(),
               }) => StreaksCompanion.insert(
                 id: id,
                 current: current,
                 longest: longest,
                 lastCompletedOnEpochDay: lastCompletedOnEpochDay,
+                graceUsedOnEpochDay: graceUsedOnEpochDay,
               ),
           withReferenceMapper: (p0) => p0
               .map(

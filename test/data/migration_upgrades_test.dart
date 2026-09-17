@@ -29,11 +29,12 @@ const _v2Ddl = '''
     PRIMARY KEY (badge_id));
 ''';
 
-/// The owner's phone is on schema 2 as of db58141: a plan in progress, days
-/// completed, chapters read, badges earned. v3 adds two columns and must not
-/// cost any of it.
+/// Upgrades from every schema the owner's phone may actually be holding.
+/// It is on schema 2 as of db58141 — a plan in progress, days completed,
+/// chapters read, a streak and a badge — and none of that may be lost on the
+/// way to the current version.
 void main() {
-  test('a v2 database upgrades to v3 keeping everything it held', () async {
+  test('a v2 database upgrades keeping everything it held', () async {
     final dir = await Directory.systemTemp.createTemp('brp_mig23');
     final file = File('${dir.path}/v2.sqlite');
 
@@ -65,7 +66,7 @@ void main() {
       (await db.customSelect('PRAGMA user_version').getSingle()).read<int>(
         'user_version',
       ),
-      3,
+      db.schemaVersion,
     );
 
     // Nothing the reader earned was lost.
@@ -89,11 +90,18 @@ void main() {
     // An old row has no stamped reference; the journal must cope.
     expect(reflections.single.reference, isNull);
 
+    // v4: the streak came across intact and has spent no grace day, so the
+    // reader's first missed day this month is still covered.
+    final streak = await repo.watchStreak().first;
+    expect(streak.current, 3);
+    expect(streak.longest, 3);
+    expect(streak.graceUsedOn, isNull);
+
     await db.close();
     await dir.delete(recursive: true);
   });
 
-  test('a v1 database upgrades straight to v3', () async {
+  test('a v1 database upgrades straight to the current schema', () async {
     final dir = await Directory.systemTemp.createTemp('brp_mig13');
     final file = File('${dir.path}/v1.sqlite');
     final raw = sqlite.sqlite3.open(file.path);
@@ -108,9 +116,9 @@ void main() {
       (await db.customSelect('PRAGMA user_version').getSingle()).read<int>(
         'user_version',
       ),
-      3,
+      db.schemaVersion,
     );
-    // Both migration steps ran, in order.
+    // Every migration step ran, in order.
     final cols = await db
         .customSelect("PRAGMA table_info('reading_sessions')")
         .get();
@@ -118,6 +126,13 @@ void main() {
     expect(
       names,
       containsAll(['passage_title', 'passage_to', 'note', 'reference']),
+    );
+    final streakCols = await db
+        .customSelect("PRAGMA table_info('streaks')")
+        .get();
+    expect(
+      streakCols.map((r) => r.read<String>('name')),
+      contains('grace_used_on_epoch_day'),
     );
 
     await db.close();

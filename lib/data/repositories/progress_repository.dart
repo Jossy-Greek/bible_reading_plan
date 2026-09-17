@@ -313,6 +313,7 @@ class ProgressRepository {
               current: Value(after.current),
               longest: Value(after.longest),
               lastCompletedOnEpochDay: Value(after.lastCompletedOn?.epochDay),
+              graceUsedOnEpochDay: Value(after.graceUsedOn?.epochDay),
             ),
           );
 
@@ -326,7 +327,13 @@ class ProgressRepository {
         nowUtc: nowUtc,
         nowLocal: nowLocal,
       );
-      return CompletionResult(streak: after, newBadges: newBadges);
+      return CompletionResult(
+        streak: after,
+        newBadges: newBadges,
+        graceUsedOn: after.graceUsedOn != before.graceUsedOn
+            ? after.graceUsedOn
+            : null,
+      );
     });
   }
 
@@ -438,12 +445,24 @@ class ProgressRepository {
           lastCompletedOn: row.lastCompletedOnEpochDay == null
               ? null
               : LocalDate.fromEpochDay(row.lastCompletedOnEpochDay!),
+          graceUsedOn: row.graceUsedOnEpochDay == null
+              ? null
+              : LocalDate.fromEpochDay(row.graceUsedOnEpochDay!),
         );
 }
 
 /// What a completion produced, for the celebration screen.
 class CompletionResult {
-  const CompletionResult({required this.streak, required this.newBadges});
+  const CompletionResult({
+    required this.streak,
+    required this.newBadges,
+    this.graceUsedOn,
+  });
   final StreakState streak;
   final List<BadgeDefinition> newBadges;
+
+  /// Set when this completion spent the month's grace day, naming the day it
+  /// covered. The celebration says so — a run that survives a miss without
+  /// explanation looks like a bug.
+  final LocalDate? graceUsedOn;
 }

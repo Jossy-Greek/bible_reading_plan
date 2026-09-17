@@ -21,14 +21,24 @@ void main() {
     expect(s.current, 1);
   });
 
-  test('a gap starts over but keeps the record', () {
+  test('a gap of two or more days starts over but keeps the record', () {
     var s = const StreakState();
     for (var i = 0; i < 5; i++) {
       s = svc.record(s, d1.plusDays(i));
     }
-    s = svc.record(s, d1.plusDays(6)); // skipped day 5
+    s = svc.record(s, d1.plusDays(7)); // skipped days 5 and 6
     expect(s.current, 1);
     expect(s.longest, 5);
+  });
+
+  test('a gap of exactly one day is covered by the month grace day', () {
+    var s = const StreakState();
+    for (var i = 0; i < 5; i++) {
+      s = svc.record(s, d1.plusDays(i));
+    }
+    s = svc.record(s, d1.plusDays(6)); // skipped day 5 only
+    expect(s.current, 6, reason: 'see grace_day_test.dart for the full rules');
+    expect(s.graceUsedOn, d1.plusDays(5));
   });
 
   test('catching up an earlier day never moves the streak', () {
@@ -38,11 +48,21 @@ void main() {
     expect(s.lastCompletedOn, d1.plusDays(3));
   });
 
-  test('displayed streak dies lazily after a missed day', () {
+  test('displayed streak dies lazily once grace cannot reach it', () {
     final s = svc.record(const StreakState(), d1);
     expect(svc.displayed(s, d1), 1);
     expect(svc.displayed(s, d1.plusDays(1)), 1, reason: 'still alive today');
-    expect(svc.displayed(s, d1.plusDays(2)), 0, reason: 'yesterday was missed');
+    expect(
+      svc.displayed(s, d1.plusDays(2)),
+      1,
+      reason: 'yesterday was missed, but this month grace can still cover it',
+    );
+    expect(svc.heldByGrace(s, d1.plusDays(2)), isTrue);
+    expect(
+      svc.displayed(s, d1.plusDays(3)),
+      0,
+      reason: 'two days missed is beyond any grace',
+    );
   });
 
   test('month and year ends are consecutive days', () {

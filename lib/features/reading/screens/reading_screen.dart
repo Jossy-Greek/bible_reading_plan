@@ -295,6 +295,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             catchUpDate: passage == null && day.date != clock.today()
                 ? formatLongDate(day.date)
                 : null,
+            graceUsedDate: result.graceUsedOn == null
+                ? null
+                : formatLongDate(result.graceUsedOn!),
           ),
         );
       }

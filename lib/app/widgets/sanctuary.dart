@@ -74,32 +74,53 @@ class StreakPill extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final streak = ref.watch(streakProvider).value;
     final today = ref.watch(clockProvider).today();
-    final n = streak == null
-        ? 0
-        : ref.watch(streakServiceProvider).displayed(streak, today);
+    final service = ref.watch(streakServiceProvider);
+    final n = streak == null ? 0 : service.displayed(streak, today);
     if (n == 0) return const SizedBox.shrink();
+    final held = streak != null && service.heldByGrace(streak, today);
     return Semantics(
-      label: '$n day reading streak',
+      label: held
+          ? '$n day reading streak, held by a grace day. Read today to keep it'
+          : '$n day reading streak',
       excludeSemantics: true,
-      child: _pill(context, n),
+      child: Tooltip(
+        message: held
+            ? 'A grace day is holding your streak — read today to keep it'
+            : '$n day streak',
+        child: _pill(context, n, held),
+      ),
     );
   }
 
-  Widget _pill(BuildContext context, int n) {
+  Widget _pill(BuildContext context, int n, bool held) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: compact ? 12 : 14,
         vertical: compact ? 6 : 8,
       ),
       decoration: BoxDecoration(
-        color: context.colors.parchmentDeep,
+        color: held
+            ? context.colors.gold.withValues(alpha: 0.18)
+            : context.colors.parchmentDeep,
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(
-        '🔥 $n',
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-          fontFeatures: const [FontFeature.tabularFigures()],
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // A held streak is not the same claim as a live one, so it does
+          // not get the same flame.
+          if (held) ...[
+            Icon(Icons.shield_outlined, size: 14, color: context.colors.gold),
+            const SizedBox(width: 5),
+          ] else
+            const Text('🔥 '),
+          Text(
+            '$n',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ],
       ),
     );
   }
