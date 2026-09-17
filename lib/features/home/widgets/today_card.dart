@@ -58,7 +58,7 @@ class TodayCard extends ConsumerWidget {
               width: 180,
               height: 180,
               decoration: BoxDecoration(
-                color: AppColors.parchmentDeep.withValues(alpha: 0.55),
+                color: context.colors.parchmentDeep.withValues(alpha: 0.55),
                 shape: BoxShape.circle,
               ),
             ),
@@ -70,7 +70,7 @@ class TodayCard extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    const Expanded(child: Overline("Today's Reading")),
+                    Expanded(child: Overline("Today's Reading")),
                     SoftChip(plan.title.split(' · ').last),
                   ],
                 ),
@@ -80,7 +80,9 @@ class TodayCard extends ConsumerWidget {
                 Text(
                   'Day ${day.dayIndex + 1} of $totalDays · $mins min · '
                   '${day.verseCount} verses',
-                  style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                  style: text.bodyLarge?.copyWith(
+                    color: context.colors.inkSoft,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -90,7 +92,7 @@ class TodayCard extends ConsumerWidget {
                         '$chaptersDone / ${day.chapterCount} chapters completed',
                         style: text.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: AppColors.inkSoft,
+                          color: context.colors.inkSoft,
                         ),
                       ),
                     ),
@@ -98,7 +100,9 @@ class TodayCard extends ConsumerWidget {
                       '${(fraction * 100).round()}%',
                       style: text.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: completed ? AppColors.success : AppColors.teal,
+                        color: completed
+                            ? context.colors.success
+                            : context.colors.teal,
                       ),
                     ),
                   ],
@@ -118,15 +122,17 @@ class TodayCard extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           color: completed
-                              ? AppColors.success
-                              : AppColors.parchmentDeep,
+                              ? context.colors.success
+                              : context.colors.parchmentDeep,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           completed ? '$label ✓' : label,
                           style: text.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: completed ? Colors.white : AppColors.ink,
+                            color: completed
+                                ? context.colors.onSuccess
+                                : context.colors.ink,
                           ),
                         ),
                       ),
@@ -136,16 +142,16 @@ class TodayCard extends ConsumerWidget {
                 if (completed)
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.check_circle,
-                        color: AppColors.success,
+                        color: context.colors.success,
                         size: 22,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         "Today's reading completed",
                         style: text.titleMedium?.copyWith(
-                          color: AppColors.success,
+                          color: context.colors.success,
                         ),
                       ),
                     ],

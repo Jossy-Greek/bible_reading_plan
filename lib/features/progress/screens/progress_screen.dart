@@ -50,8 +50,8 @@ class ProgressScreen extends ConsumerWidget {
                         CircularProgressIndicator(
                           value: p.fraction,
                           strokeWidth: 10,
-                          backgroundColor: AppColors.parchmentDeep,
-                          color: AppColors.teal,
+                          backgroundColor: context.colors.parchmentDeep,
+                          color: context.colors.teal,
                           strokeCap: StrokeCap.round,
                         ),
                         Center(
@@ -67,19 +67,19 @@ class ProgressScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 24),
+                  SizedBox(width: 24),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.menu_book_outlined,
                               size: 18,
-                              color: AppColors.teal,
+                              color: context.colors.teal,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             const Overline('Bible progress'),
                           ],
                         ),
@@ -94,7 +94,7 @@ class ProgressScreen extends ConsumerWidget {
                               TextSpan(
                                 text: ' /${_n(p.totalChapters)}',
                                 style: text.titleMedium?.copyWith(
-                                  color: AppColors.inkSoft,
+                                  color: context.colors.inkSoft,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -104,7 +104,7 @@ class ProgressScreen extends ConsumerWidget {
                         Text(
                           'chapters read',
                           style: text.bodyMedium?.copyWith(
-                            color: AppColors.inkSoft,
+                            color: context.colors.inkSoft,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -234,7 +234,7 @@ class _TestamentBar extends StatelessWidget {
             Text(
               '$done / $total',
               style: text.bodyMedium?.copyWith(
-                color: AppColors.inkSoft,
+                color: context.colors.inkSoft,
                 fontFeatures: const [FontFeature.tabularFigures()],
               ),
             ),
@@ -272,13 +272,13 @@ class _Stat extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(icon, size: 18, color: AppColors.inkSoft),
+                Icon(icon, size: 18, color: context.colors.inkSoft),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     label,
                     style: text.bodySmall?.copyWith(
-                      color: AppColors.inkSoft,
+                      color: context.colors.inkSoft,
                       fontWeight: FontWeight.w600,
                     ),
                     maxLines: 1,
@@ -301,7 +301,9 @@ class _Stat extends StatelessWidget {
                   if (suffix != null)
                     TextSpan(
                       text: ' $suffix',
-                      style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                      style: text.bodyLarge?.copyWith(
+                        color: context.colors.inkSoft,
+                      ),
                     ),
                 ],
               ),
@@ -324,10 +326,22 @@ class _BookRow extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final started = p.completed > 0;
     final (IconData icon, Color iconColor, Color well) = p.isDone
-        ? (Icons.check_rounded, Colors.white, AppColors.success)
+        ? (
+            Icons.check_rounded,
+            context.colors.onSuccess,
+            context.colors.success,
+          )
         : started
-        ? (Icons.play_arrow_rounded, AppColors.teal, AppColors.parchmentDeep)
-        : (Icons.circle_outlined, AppColors.inkSoft, AppColors.parchmentDeep);
+        ? (
+            Icons.play_arrow_rounded,
+            context.colors.teal,
+            context.colors.parchmentDeep,
+          )
+        : (
+            Icons.circle_outlined,
+            context.colors.inkSoft,
+            context.colors.parchmentDeep,
+          );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -346,7 +360,9 @@ class _BookRow extends StatelessWidget {
                   p.book.name,
                   style: text.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: started ? AppColors.ink : AppColors.inkSoft,
+                    color: started
+                        ? context.colors.ink
+                        : context.colors.inkSoft,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -354,7 +370,7 @@ class _BookRow extends StatelessWidget {
               Text(
                 '${p.completed} / ${p.book.chapters}',
                 style: text.bodyMedium?.copyWith(
-                  color: AppColors.inkSoft,
+                  color: context.colors.inkSoft,
                   fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),

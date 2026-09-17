@@ -57,7 +57,9 @@ class CompletionScreen extends StatelessWidget {
                 Text(
                   "You finished ${args.catchUpDate}'s reading.",
                   textAlign: TextAlign.center,
-                  style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                  style: text.bodyLarge?.copyWith(
+                    color: context.colors.inkSoft,
+                  ),
                 ),
               ],
               const SizedBox(height: 24),
@@ -71,14 +73,18 @@ class CompletionScreen extends StatelessWidget {
               Text(
                 '${args.label} ✓',
                 textAlign: TextAlign.center,
-                style: text.titleMedium?.copyWith(color: AppColors.success),
+                style: text.titleMedium?.copyWith(
+                  color: context.colors.success,
+                ),
               ),
               if (badges.isNotEmpty) ...[
                 const SizedBox(height: 32),
                 Text(
                   badges.length == 1 ? 'New badge' : 'New badges',
                   textAlign: TextAlign.center,
-                  style: text.labelLarge?.copyWith(color: AppColors.inkSoft),
+                  style: text.labelLarge?.copyWith(
+                    color: context.colors.inkSoft,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 for (final b in badges)

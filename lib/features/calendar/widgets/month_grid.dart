@@ -44,7 +44,9 @@ class MonthGrid extends StatelessWidget {
                 child: Center(
                   child: Text(
                     w,
-                    style: text.labelSmall?.copyWith(color: AppColors.inkSoft),
+                    style: text.labelSmall?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
                   ),
                 ),
               ),
@@ -81,17 +83,21 @@ class _DayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final (Color bg, Color fg, String? mark) = switch (status) {
-      DayStatus.completed => (AppColors.success, Colors.white, '✓'),
+      DayStatus.completed => (
+        context.colors.success,
+        context.colors.onSuccess,
+        '✓',
+      ),
       DayStatus.missed => (
-        AppColors.missed.withValues(alpha: 0.18),
-        AppColors.missed,
+        context.colors.missed.withValues(alpha: 0.18),
+        context.colors.missed,
         '○',
       ),
-      DayStatus.todayPending => (AppColors.card, AppColors.ink, '•'),
-      DayStatus.future => (Colors.white, AppColors.inkSoft, '—'),
+      DayStatus.todayPending => (context.colors.card, context.colors.ink, '•'),
+      DayStatus.future => (context.colors.card, context.colors.inkSoft, '—'),
       DayStatus.outsidePlan => (
         Colors.transparent,
-        AppColors.inkSoft.withValues(alpha: 0.45),
+        context.colors.inkSoft.withValues(alpha: 0.45),
         null,
       ),
     };
@@ -102,7 +108,9 @@ class _DayCell extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(12),
-          border: isToday ? Border.all(color: AppColors.teal, width: 2) : null,
+          border: isToday
+              ? Border.all(color: context.colors.teal, width: 2)
+              : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

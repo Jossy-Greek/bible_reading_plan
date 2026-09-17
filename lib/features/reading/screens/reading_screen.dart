@@ -105,8 +105,8 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back),
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.parchmentDeep,
-            foregroundColor: AppColors.ink,
+            backgroundColor: context.colors.parchmentDeep,
+            foregroundColor: context.colors.ink,
           ),
         ),
         showStreak: false,
@@ -130,8 +130,8 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                           ),
                           decoration: BoxDecoration(
                             color: done
-                                ? AppColors.success.withValues(alpha: 0.15)
-                                : AppColors.parchmentDeep,
+                                ? context.colors.success.withValues(alpha: 0.15)
+                                : context.colors.parchmentDeep,
                             borderRadius: BorderRadius.circular(999),
                           ),
                           child: Row(
@@ -142,8 +142,8 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                                 height: 8,
                                 decoration: BoxDecoration(
                                   color: done
-                                      ? AppColors.success
-                                      : AppColors.teal,
+                                      ? context.colors.success
+                                      : context.colors.teal,
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -152,7 +152,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                                 done
                                     ? 'Reading time completed'
                                     : 'Session in progress',
-                                color: done ? AppColors.success : AppColors.ink,
+                                color: done
+                                    ? context.colors.success
+                                    : context.colors.ink,
                               ),
                             ],
                           ),
@@ -175,16 +177,16 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.schedule,
                               size: 18,
-                              color: AppColors.inkSoft,
+                              color: context.colors.inkSoft,
                             ),
                             const SizedBox(width: 6),
                             Text(
                               'Required time ${formatCountdown(timing.required)}',
                               style: text.bodyLarge?.copyWith(
-                                color: AppColors.inkSoft,
+                                color: context.colors.inkSoft,
                               ),
                             ),
                           ],
@@ -206,7 +208,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                           style: text.displayLarge?.copyWith(
                             fontSize: 72,
                             fontFeatures: const [FontFeature.tabularFigures()],
-                            color: done ? AppColors.success : AppColors.ink,
+                            color: done
+                                ? context.colors.success
+                                : context.colors.ink,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -214,7 +218,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                         const SizedBox(height: 28),
                         ThinBar(
                           timing.progress,
-                          color: done ? AppColors.success : AppColors.teal,
+                          color: done
+                              ? context.colors.success
+                              : context.colors.teal,
                         ),
                         const SizedBox(height: 10),
                         Row(
@@ -222,7 +228,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                             Text(
                               '${formatCountdown(timing.elapsed)} elapsed',
                               style: text.bodyMedium?.copyWith(
-                                color: AppColors.inkSoft,
+                                color: context.colors.inkSoft,
                                 fontFeatures: const [
                                   FontFeature.tabularFigures(),
                                 ],
@@ -232,7 +238,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                             Text(
                               '${(timing.progress * 100).round()}% read',
                               style: text.bodyMedium?.copyWith(
-                                color: AppColors.inkSoft,
+                                color: context.colors.inkSoft,
                               ),
                             ),
                           ],
@@ -241,7 +247,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                         Text(
                           '❝',
                           style: text.titleLarge?.copyWith(
-                            color: AppColors.gold,
+                            color: context.colors.gold,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -266,15 +272,15 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: AppColors.parchmentDeep.withValues(alpha: 0.6),
+                    color: context.colors.parchmentDeep.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const IconWell(
+                      IconWell(
                         Icons.menu_book_outlined,
-                        color: Colors.white,
+                        color: context.colors.card,
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -291,7 +297,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                               'while the screen is off, and picks up exactly '
                               'where it was when you return.',
                               style: text.bodyMedium?.copyWith(
-                                color: AppColors.inkSoft,
+                                color: context.colors.inkSoft,
                               ),
                             ),
                           ],
@@ -309,7 +315,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             child: Column(
               children: [
                 FilledButton.icon(
-                  style: kTimerButtonStyle,
+                  style: timerButtonStyle(context.colors),
                   onPressed: done && !_completing ? _complete : null,
                   icon: Icon(
                     done ? Icons.check_rounded : Icons.hourglass_top_rounded,
@@ -325,7 +331,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                   done
                       ? 'Well done. Mark it and the day is yours.'
                       : '✦ Mark as Done unlocks at 0:00',
-                  style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+                  style: text.bodySmall?.copyWith(
+                    color: context.colors.inkSoft,
+                  ),
                 ),
               ],
             ),

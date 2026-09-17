@@ -60,9 +60,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 _TodayCard(cal: cal, streak: shownStreak),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 if (_yearly) ...[
                   const Overline('Your reading journey'),
                   const SizedBox(height: 4),
@@ -74,7 +74,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   Text(
                     '${cal.completedCount} of ${cal.days.length} days completed'
                     '${cal.missedCount > 0 ? ' · ${cal.missedCount} missed' : ''}',
-                    style: text.bodyMedium?.copyWith(color: AppColors.inkSoft),
+                    style: text.bodyMedium?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Card(
@@ -104,7 +106,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          color: AppColors.card,
+                          color: context.colors.card,
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Row(
@@ -135,11 +137,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _legend('✓', 'completed', AppColors.success),
+                      _legend('✓', 'completed', context.colors.success),
                       const SizedBox(width: 20),
-                      _legend('○', 'missed', AppColors.missed),
+                      _legend('○', 'missed', context.colors.missed),
                       const SizedBox(width: 20),
-                      _legend('–', 'ahead', AppColors.inkSoft),
+                      _legend('–', 'ahead', context.colors.inkSoft),
                     ],
                   ),
                 ],
@@ -150,7 +152,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   style: text.titleMedium?.copyWith(
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.inkSoft,
+                    color: context.colors.inkSoft,
                     height: 1.45,
                   ),
                 ),
@@ -212,9 +214,11 @@ class _TodayCard extends StatelessWidget {
                         SoftChip(
                           done ? 'Done' : 'Pending',
                           color: done
-                              ? AppColors.success.withValues(alpha: 0.15)
-                              : AppColors.parchmentDeep,
-                          textColor: done ? AppColors.success : AppColors.ink,
+                              ? context.colors.success.withValues(alpha: 0.15)
+                              : context.colors.parchmentDeep,
+                          textColor: done
+                              ? context.colors.success
+                              : context.colors.ink,
                         ),
                     ],
                   ),
@@ -230,7 +234,9 @@ class _TodayCard extends StatelessWidget {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: done ? AppColors.success : AppColors.missed,
+                          color: done
+                              ? context.colors.success
+                              : context.colors.missed,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -242,7 +248,7 @@ class _TodayCard extends StatelessWidget {
                             ? 'Completed'
                             : 'Not completed yet',
                         style: text.bodyLarge?.copyWith(
-                          color: AppColors.inkSoft,
+                          color: context.colors.inkSoft,
                         ),
                       ),
                     ],
@@ -250,11 +256,11 @@ class _TodayCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 14),
               decoration: BoxDecoration(
-                color: AppColors.parchmentDeep,
+                color: context.colors.parchmentDeep,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -301,14 +307,18 @@ class _PaceCard extends StatelessWidget {
                   Text(
                     '${m.completed} completed • ${m.missed} missed • '
                     '${m.remaining} remaining',
-                    style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+                    style: text.bodySmall?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
                   ),
                 ],
               ),
             ),
             Text(
               m.pace == null ? '—' : '${(m.pace! * 100).round()}%',
-              style: text.headlineSmall?.copyWith(color: AppColors.success),
+              style: text.headlineSmall?.copyWith(
+                color: context.colors.success,
+              ),
             ),
           ],
         ),

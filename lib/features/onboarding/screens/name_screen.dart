@@ -38,7 +38,7 @@ class _NameScreenState extends ConsumerState<NameScreen> {
               const SizedBox(height: 8),
               Text(
                 'Your name stays on this device.',
-                style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                style: text.bodyLarge?.copyWith(color: context.colors.inkSoft),
               ),
               const SizedBox(height: 32),
               TextField(

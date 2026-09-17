@@ -14,8 +14,8 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       body: shell,
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.parchmentDeep)),
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: context.colors.parchmentDeep)),
         ),
         child: NavigationBar(
           selectedIndex: shell.currentIndex,

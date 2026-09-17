@@ -28,7 +28,7 @@ class SettingsScreen extends ConsumerWidget {
       child: Text(
         t.toUpperCase(),
         style: text.labelSmall?.copyWith(
-          color: AppColors.inkSoft,
+          color: context.colors.inkSoft,
           letterSpacing: 1.1,
         ),
       ),
@@ -166,7 +166,9 @@ class SettingsScreen extends ConsumerWidget {
                   Text(
                     'Sets how long each reading must take. Verse counts are '
                     'fixed; this is how fast you read them.',
-                    style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+                    style: text.bodySmall?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   SegmentedButton<ReadingPace>(
@@ -187,6 +189,43 @@ class SettingsScreen extends ConsumerWidget {
                     ],
                     selected: {settings.pace},
                     onSelectionChanged: (s) => actions.setPace(s.first),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          header('Appearance'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Theme'),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Quiet Sanctuary by day, and the same room with the lamp '
+                    'low at night.',
+                    style: text.bodySmall?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  SegmentedButton<ThemeMode>(
+                    showSelectedIcon: false,
+                    segments: const [
+                      ButtonSegment(
+                        value: ThemeMode.light,
+                        label: Text('Light'),
+                      ),
+                      ButtonSegment(value: ThemeMode.dark, label: Text('Dark')),
+                      ButtonSegment(
+                        value: ThemeMode.system,
+                        label: Text('System'),
+                      ),
+                    ],
+                    selected: {settings.themeMode},
+                    onSelectionChanged: (s) => actions.setThemeMode(s.first),
                   ),
                 ],
               ),
@@ -216,9 +255,9 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.restart_alt,
-                    color: AppColors.missed,
+                    color: context.colors.missed,
                   ),
                   title: const Text('Reset progress'),
                   subtitle: const Text(
@@ -238,9 +277,9 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.delete_forever_outlined,
-                    color: AppColors.missed,
+                    color: context.colors.missed,
                   ),
                   title: const Text('Clear all local data'),
                   subtitle: const Text('Back to the first launch.'),
@@ -253,7 +292,7 @@ class SettingsScreen extends ConsumerWidget {
           Center(
             child: Text(
               'Everything stays on this device.',
-              style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+              style: text.bodySmall?.copyWith(color: context.colors.inkSoft),
             ),
           ),
         ],
@@ -368,7 +407,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           FilledButton(
             style: destructive
-                ? FilledButton.styleFrom(backgroundColor: AppColors.missed)
+                ? FilledButton.styleFrom(backgroundColor: context.colors.missed)
                 : null,
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(action),
@@ -410,7 +449,9 @@ class SettingsScreen extends ConsumerWidget {
               child: const Text('Cancel'),
             ),
             FilledButton(
-              style: FilledButton.styleFrom(backgroundColor: AppColors.missed),
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.missed,
+              ),
               onPressed: controller.text.trim() == 'DELETE'
                   ? () => Navigator.of(ctx).pop(true)
                   : null,
@@ -443,7 +484,7 @@ class _PermissionNote extends ConsumerWidget {
             'settings. Turn them on there to receive reminders.',
             style: Theme.of(
               context,
-            ).textTheme.bodySmall?.copyWith(color: AppColors.missed),
+            ).textTheme.bodySmall?.copyWith(color: context.colors.missed),
           ),
         );
       },
@@ -475,7 +516,7 @@ class _ScheduledReadout extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
           child: Text(
             line,
-            style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+            style: text.bodySmall?.copyWith(color: context.colors.inkSoft),
           ),
         );
       },

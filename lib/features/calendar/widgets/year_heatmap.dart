@@ -44,7 +44,12 @@ class YearHeatmap extends StatelessWidget {
                   for (var w = 0; w < weeks; w++)
                     SizedBox(
                       width: _cell + _gap,
-                      child: _monthLabel(first.plusDays(w * 7), w == 0, text),
+                      child: _monthLabel(
+                        context,
+                        first.plusDays(w * 7),
+                        w == 0,
+                        text,
+                      ),
                     ),
                 ],
               ),
@@ -61,6 +66,7 @@ class YearHeatmap extends StatelessWidget {
                               bottom: _gap,
                             ),
                             child: _cellFor(
+                              context,
                               first.plusDays(w * 7 + r),
                               maxChapters,
                             ),
@@ -77,17 +83,30 @@ class YearHeatmap extends StatelessWidget {
           spacing: 14,
           runSpacing: 6,
           children: [
-            _legend(AppColors.success.withValues(alpha: 0.35), 'Lighter day'),
-            _legend(AppColors.success, 'Heavier day'),
-            _legend(AppColors.missed.withValues(alpha: 0.35), 'Missed'),
-            _legend(AppColors.parchmentDeep, 'Ahead'),
+            _legend(
+              context,
+              context.colors.success.withValues(alpha: 0.35),
+              'Lighter day',
+            ),
+            _legend(context, context.colors.success, 'Heavier day'),
+            _legend(
+              context,
+              context.colors.missed.withValues(alpha: 0.35),
+              'Missed',
+            ),
+            _legend(context, context.colors.parchmentDeep, 'Ahead'),
           ],
         ),
       ],
     );
   }
 
-  Widget _monthLabel(LocalDate weekStart, bool isFirst, TextTheme text) {
+  Widget _monthLabel(
+    BuildContext context,
+    LocalDate weekStart,
+    bool isFirst,
+    TextTheme text,
+  ) {
     // Label a column when the month changes within it (or on the first).
     final weekEnd = weekStart.plusDays(6);
     final show =
@@ -100,13 +119,16 @@ class YearHeatmap extends StatelessWidget {
         : weekStart.month;
     return Text(
       formatMonthShort(month),
-      style: text.labelSmall?.copyWith(color: AppColors.inkSoft, fontSize: 10),
+      style: text.labelSmall?.copyWith(
+        color: context.colors.inkSoft,
+        fontSize: 10,
+      ),
       overflow: TextOverflow.visible,
       softWrap: false,
     );
   }
 
-  Widget _cellFor(LocalDate date, int maxChapters) {
+  Widget _cellFor(BuildContext context, LocalDate date, int maxChapters) {
     final status = calendar.statusOn(date);
     final day = calendar.dayOn(date);
     Color color;
@@ -115,13 +137,13 @@ class YearHeatmap extends StatelessWidget {
         final level = maxChapters == 0
             ? 1.0
             : (day!.chapterCount / maxChapters).clamp(0.25, 1.0);
-        color = AppColors.success.withValues(alpha: 0.3 + 0.7 * level);
+        color = context.colors.success.withValues(alpha: 0.3 + 0.7 * level);
       case DayStatus.missed:
-        color = AppColors.missed.withValues(alpha: 0.35);
+        color = context.colors.missed.withValues(alpha: 0.35);
       case DayStatus.todayPending:
-        color = AppColors.parchmentDeep;
+        color = context.colors.parchmentDeep;
       case DayStatus.future:
-        color = AppColors.parchmentDeep;
+        color = context.colors.parchmentDeep;
       case DayStatus.outsidePlan:
         color = Colors.transparent;
     }
@@ -135,14 +157,14 @@ class YearHeatmap extends StatelessWidget {
           color: color,
           borderRadius: BorderRadius.circular(3),
           border: isToday
-              ? Border.all(color: AppColors.teal, width: 1.5)
+              ? Border.all(color: context.colors.teal, width: 1.5)
               : null,
         ),
       ),
     );
   }
 
-  Widget _legend(Color c, String label) => Row(
+  Widget _legend(BuildContext context, Color c, String label) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
       Container(
@@ -156,7 +178,7 @@ class YearHeatmap extends StatelessWidget {
       const SizedBox(width: 6),
       Text(
         label,
-        style: const TextStyle(fontSize: 12, color: AppColors.inkSoft),
+        style: TextStyle(fontSize: 12, color: context.colors.inkSoft),
       ),
     ],
   );

@@ -90,7 +90,7 @@ class HomeScreen extends ConsumerWidget {
           // A verse, as a quiet accent. Rotates with the plan day.
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -98,9 +98,11 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '❝',
-                        style: text.titleLarge?.copyWith(color: AppColors.gold),
+                        style: text.titleLarge?.copyWith(
+                          color: context.colors.gold,
+                        ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       const Overline('Verse for today'),
                     ],
                   ),
@@ -117,7 +119,7 @@ class HomeScreen extends ConsumerWidget {
                   Text(
                     verse.ref,
                     style: text.bodyMedium?.copyWith(
-                      color: AppColors.inkSoft,
+                      color: context.colors.inkSoft,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -131,16 +133,16 @@ class HomeScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: AppColors.parchmentDeep.withValues(alpha: 0.6),
+                color: context.colors.parchmentDeep.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 children: [
-                  const IconWell(
+                  IconWell(
                     Icons.wb_twilight_outlined,
-                    color: Colors.white,
+                    color: context.colors.card,
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +155,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   SoftChip(
                     '~${(tomorrow.requiredDuration.inSeconds / 60).round()} min',
-                    color: Colors.white,
+                    color: context.colors.card,
                   ),
                 ],
               ),
@@ -169,8 +171,8 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(20),
                 child: Row(
                   children: [
-                    const IconWell(Icons.explore_outlined),
-                    const SizedBox(width: 14),
+                    IconWell(Icons.explore_outlined),
+                    SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,13 +187,13 @@ class HomeScreen extends ConsumerWidget {
                           Text(
                             'Sermon on the Mount, Psalm 23, any chapters you choose',
                             style: text.bodySmall?.copyWith(
-                              color: AppColors.inkSoft,
+                              color: context.colors.inkSoft,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: AppColors.inkSoft),
+                    Icon(Icons.chevron_right, color: context.colors.inkSoft),
                   ],
                 ),
               ),
@@ -254,7 +256,7 @@ class _QuickTile extends StatelessWidget {
               const SizedBox(height: 32),
               Text(
                 label,
-                style: text.bodyMedium?.copyWith(color: AppColors.inkSoft),
+                style: text.bodyMedium?.copyWith(color: context.colors.inkSoft),
               ),
               const SizedBox(height: 2),
               Text(value, style: text.titleSmall),

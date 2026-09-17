@@ -34,7 +34,7 @@ class _ReminderScreenState extends ConsumerState<ReminderScreen> {
               Text(
                 'One gentle notification a day. You can change or turn it '
                 'off any time in Settings.',
-                style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                style: text.bodyLarge?.copyWith(color: context.colors.inkSoft),
               ),
               const SizedBox(height: 32),
               Card(

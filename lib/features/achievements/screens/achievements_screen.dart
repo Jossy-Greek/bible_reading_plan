@@ -23,7 +23,7 @@ class AchievementsScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 12),
             child: Text(
               '${unlocked.length} / ${kBadges.length}',
-              style: text.titleMedium?.copyWith(color: AppColors.inkSoft),
+              style: text.titleMedium?.copyWith(color: context.colors.inkSoft),
             ),
           ),
         ],
@@ -40,7 +40,9 @@ class AchievementsScreen extends ConsumerWidget {
                   Text(
                     '${kBadges.where((b) => b.category == c && unlocked.containsKey(b.id)).length}'
                     ' / ${kBadges.where((b) => b.category == c).length}',
-                    style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+                    style: text.bodySmall?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
                   ),
                 ],
               ),
@@ -76,8 +78,8 @@ class _BadgeTile extends StatelessWidget {
     final earned = unlockedAt != null;
     return Card(
       color: earned
-          ? Colors.white
-          : AppColors.parchmentDeep.withValues(alpha: 0.6),
+          ? context.colors.card
+          : context.colors.parchmentDeep.withValues(alpha: 0.6),
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(
@@ -91,7 +93,7 @@ class _BadgeTile extends StatelessWidget {
             Text(
               badge.title,
               style: text.titleSmall?.copyWith(
-                color: earned ? AppColors.ink : AppColors.inkSoft,
+                color: earned ? context.colors.ink : context.colors.inkSoft,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -101,7 +103,7 @@ class _BadgeTile extends StatelessWidget {
               earned
                   ? 'Earned ${formatMediumDate(LocalDate.fromDateTime(unlockedAt!.toLocal()))}'
                   : badge.description,
-              style: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+              style: text.bodySmall?.copyWith(color: context.colors.inkSoft),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

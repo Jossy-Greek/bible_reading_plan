@@ -33,8 +33,8 @@ class PassagesScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back),
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.parchmentDeep,
-            foregroundColor: AppColors.ink,
+            backgroundColor: context.colors.parchmentDeep,
+            foregroundColor: context.colors.ink,
           ),
         ),
         showStreak: false,
@@ -46,24 +46,24 @@ class PassagesScreen extends ConsumerWidget {
             'Read a passage on its own. It is timed like a plan day, its '
             'chapters count toward your Bible progress, and some passages '
             'carry a badge. It does not change your streak.',
-            style: text.bodyMedium?.copyWith(color: AppColors.inkSoft),
+            style: text.bodyMedium?.copyWith(color: context.colors.inkSoft),
           ),
           if (open != null) ...[
             const SizedBox(height: 16),
             Card(
               child: ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.hourglass_top_rounded,
-                  color: AppColors.teal,
+                  color: context.colors.teal,
                 ),
                 title: const Text('A reading is already open'),
                 subtitle: const Text('Finish it before starting another.'),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: Icon(Icons.chevron_right),
                 onTap: () => context.push('/reading'),
               ),
             ),
           ],
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           const Overline('Well-known passages'),
           const SizedBox(height: 10),
           Card(
@@ -81,8 +81,8 @@ class PassagesScreen extends ConsumerWidget {
                       height: 36,
                       decoration: BoxDecoration(
                         color: isDone(p)
-                            ? AppColors.success
-                            : AppColors.parchmentDeep,
+                            ? context.colors.success
+                            : context.colors.parchmentDeep,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -90,7 +90,9 @@ class PassagesScreen extends ConsumerWidget {
                             ? Icons.check_rounded
                             : Icons.menu_book_outlined,
                         size: 18,
-                        color: isDone(p) ? Colors.white : AppColors.teal,
+                        color: isDone(p)
+                            ? context.colors.onSuccess
+                            : context.colors.teal,
                       ),
                     ),
                     title: Text(p.title, style: text.titleSmall),
@@ -98,14 +100,14 @@ class PassagesScreen extends ConsumerWidget {
                       '${p.reference} · ${p.verses} verses · '
                       '~${(time.estimate(p.assignment.chapters, pace).inSeconds / 60).round()} min',
                     ),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: Icon(Icons.chevron_right),
                     onTap: open != null ? null : () => _start(context, ref, p),
                   ),
                 ],
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           const Overline('Any passage'),
           const SizedBox(height: 10),
           Card(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../notifications/reminder_coordinator.dart';
+import '../features/settings/providers/settings_providers.dart';
 import 'providers.dart';
 import 'router.dart';
 import 'theme/app_theme.dart';
@@ -46,9 +47,15 @@ class _AppState extends ConsumerState<BibleReadingPlanApp>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(settingsRevisionProvider);
+    final themeMode = ref.watch(settingsProvider).themeMode;
     return MaterialApp.router(
       title: 'Bible Reading Plan',
-      theme: buildAppTheme(),
+      theme: buildAppTheme(Brightness.light),
+      darkTheme: buildAppTheme(Brightness.dark),
+      // SharedPreferences is not observable: watch the revision counter so
+      // switching Light/Dark in Settings repaints the whole app at once.
+      themeMode: themeMode,
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
     );

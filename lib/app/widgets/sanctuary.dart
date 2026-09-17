@@ -17,7 +17,7 @@ class Emblem extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.parchmentDeep,
+        color: context.colors.parchmentDeep,
         borderRadius: BorderRadius.circular(size * 0.3),
       ),
       child: Stack(
@@ -25,7 +25,7 @@ class Emblem extends StatelessWidget {
         children: [
           Icon(
             Icons.menu_book_rounded,
-            color: AppColors.teal,
+            color: context.colors.teal,
             size: size * 0.55,
           ),
           Positioned(
@@ -33,8 +33,8 @@ class Emblem extends StatelessWidget {
             child: Container(
               width: size * 0.13,
               height: size * 0.13,
-              decoration: const BoxDecoration(
-                color: AppColors.gold,
+              decoration: BoxDecoration(
+                color: context.colors.gold,
                 shape: BoxShape.circle,
               ),
             ),
@@ -47,15 +47,17 @@ class Emblem extends StatelessWidget {
 
 /// Small uppercase tracking label: "TODAY'S READING", "SEPTEMBER PACE".
 class Overline extends StatelessWidget {
-  const Overline(this.text, {super.key, this.color = AppColors.inkSoft});
+  const Overline(this.text, {super.key, this.color});
   final String text;
-  final Color color;
+
+  /// Defaults to `inkSoft`, resolved at build so dark mode reaches it.
+  final Color? color;
 
   @override
   Widget build(BuildContext context) => Text(
     text.toUpperCase(),
     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-      color: color,
+      color: color ?? context.colors.inkSoft,
       letterSpacing: 1.1,
       fontWeight: FontWeight.w600,
     ),
@@ -82,7 +84,7 @@ class StreakPill extends ConsumerWidget {
         vertical: compact ? 6 : 8,
       ),
       decoration: BoxDecoration(
-        color: AppColors.parchmentDeep,
+        color: context.colors.parchmentDeep,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
@@ -122,7 +124,7 @@ class SanctuaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     return Container(
-      color: AppColors.parchment,
+      color: context.colors.parchment,
       child: SafeArea(
         bottom: false,
         child: Padding(
@@ -136,7 +138,7 @@ class SanctuaryAppBar extends StatelessWidget implements PreferredSizeWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Overline(overline, color: AppColors.teal),
+                    Overline(overline, color: context.colors.teal),
                     Text(title, style: text.titleLarge),
                   ],
                 ),
@@ -153,13 +155,13 @@ class SanctuaryAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Container(
                     width: 40,
                     height: 40,
-                    decoration: const BoxDecoration(
-                      color: AppColors.teal,
+                    decoration: BoxDecoration(
+                      color: context.colors.teal,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person_outline,
-                      color: Colors.white,
+                      color: context.colors.onTeal,
                       size: 20,
                     ),
                   ),
@@ -184,10 +186,10 @@ class IconWell extends StatelessWidget {
     width: size,
     height: size,
     decoration: BoxDecoration(
-      color: color ?? AppColors.parchmentDeep,
+      color: color ?? context.colors.parchmentDeep,
       shape: BoxShape.circle,
     ),
-    child: Icon(icon, color: AppColors.teal, size: size * 0.5),
+    child: Icon(icon, color: context.colors.teal, size: size * 0.5),
   );
 }
 
@@ -204,8 +206,9 @@ class ThinBar extends StatelessWidget {
     child: LinearProgressIndicator(
       value: value.clamp(0.0, 1.0),
       minHeight: height,
-      backgroundColor: AppColors.parchmentDeep,
-      color: color ?? (value >= 1 ? AppColors.success : AppColors.teal),
+      backgroundColor: context.colors.parchmentDeep,
+      color:
+          color ?? (value >= 1 ? context.colors.success : context.colors.teal),
     ),
   );
 }
@@ -221,14 +224,14 @@ class SoftChip extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     decoration: BoxDecoration(
-      color: color ?? AppColors.parchmentDeep,
+      color: color ?? context.colors.parchmentDeep,
       borderRadius: BorderRadius.circular(999),
     ),
     child: Text(
       label,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
         fontWeight: FontWeight.w600,
-        color: textColor ?? AppColors.ink,
+        color: textColor ?? context.colors.ink,
       ),
     ),
   );

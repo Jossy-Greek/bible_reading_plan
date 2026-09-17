@@ -2,17 +2,146 @@ import 'package:flutter/material.dart';
 
 /// "Quiet Sanctuary": parchment ground, iron-gall ink, river-clay teal, a
 /// little hammered gold. Depth is tonal, never shadowed.
-abstract final class AppColors {
-  static const parchment = Color(0xFFFBF8F1);
-  static const parchmentDeep = Color(0xFFF1EBDD);
-  static const ink = Color(0xFF1F3A3D);
-  static const inkSoft = Color(0xFF52696B);
-  static const teal = Color(0xFF2F5D62);
-  static const tealDeep = Color(0xFF14454A);
-  static const gold = Color(0xFFC6A15B);
-  static const success = Color(0xFF4E7D5B);
-  static const missed = Color(0xFFC77B6A);
-  static const card = Colors.white;
+///
+/// Every colour the app draws lives here, as a [ThemeExtension] so the same
+/// token resolves differently by night. Widgets read them through
+/// `context.colors` — never a `const` colour, or dark mode would not reach it.
+@immutable
+class SanctuaryColors extends ThemeExtension<SanctuaryColors> {
+  const SanctuaryColors({
+    required this.parchment,
+    required this.parchmentDeep,
+    required this.card,
+    required this.ink,
+    required this.inkSoft,
+    required this.teal,
+    required this.tealDeep,
+    required this.onTeal,
+    required this.gold,
+    required this.success,
+    required this.onSuccess,
+    required this.missed,
+  });
+
+  /// The page ground.
+  final Color parchment;
+
+  /// A raised or recessed tint of the ground: chips, tracks, wells.
+  final Color parchmentDeep;
+
+  /// Card fill, one step off the ground.
+  final Color card;
+
+  /// Primary text.
+  final Color ink;
+
+  /// Secondary text, and every icon that is not an accent.
+  final Color inkSoft;
+
+  /// The accent: buttons, selected state, progress.
+  final Color teal;
+  final Color tealDeep;
+
+  /// Text and icons drawn *on* [teal].
+  final Color onTeal;
+
+  /// The one warm accent. Used sparingly, for quotation marks and the emblem.
+  final Color gold;
+
+  /// Completed.
+  final Color success;
+  final Color onSuccess;
+
+  /// A missed day. Never red — this app does not scold.
+  final Color missed;
+
+  /// Day: warm paper, dark ink.
+  static const light = SanctuaryColors(
+    parchment: Color(0xFFFBF8F1),
+    parchmentDeep: Color(0xFFF1EBDD),
+    card: Colors.white,
+    ink: Color(0xFF1F3A3D),
+    inkSoft: Color(0xFF52696B),
+    teal: Color(0xFF2F5D62),
+    tealDeep: Color(0xFF14454A),
+    onTeal: Colors.white,
+    gold: Color(0xFFC6A15B),
+    success: Color(0xFF4E7D5B),
+    onSuccess: Colors.white,
+    missed: Color(0xFFC77B6A),
+  );
+
+  /// Night: the same room with the lamp low. Deliberately not black — a
+  /// pure-black ground under a 56 px countdown is a glare at 5 a.m.
+  static const dark = SanctuaryColors(
+    parchment: Color(0xFF0F1718),
+    parchmentDeep: Color(0xFF1E2C2E),
+    card: Color(0xFF162122),
+    ink: Color(0xFFEBE6DA),
+    inkSoft: Color(0xFF9FB2B3),
+    teal: Color(0xFF7FC0C5),
+    tealDeep: Color(0xFFA5D8DC),
+    onTeal: Color(0xFF0B1718),
+    gold: Color(0xFFD9B878),
+    success: Color(0xFF7FB88F),
+    onSuccess: Color(0xFF0B1718),
+    missed: Color(0xFFD79A88),
+  );
+
+  @override
+  SanctuaryColors copyWith({
+    Color? parchment,
+    Color? parchmentDeep,
+    Color? card,
+    Color? ink,
+    Color? inkSoft,
+    Color? teal,
+    Color? tealDeep,
+    Color? onTeal,
+    Color? gold,
+    Color? success,
+    Color? onSuccess,
+    Color? missed,
+  }) => SanctuaryColors(
+    parchment: parchment ?? this.parchment,
+    parchmentDeep: parchmentDeep ?? this.parchmentDeep,
+    card: card ?? this.card,
+    ink: ink ?? this.ink,
+    inkSoft: inkSoft ?? this.inkSoft,
+    teal: teal ?? this.teal,
+    tealDeep: tealDeep ?? this.tealDeep,
+    onTeal: onTeal ?? this.onTeal,
+    gold: gold ?? this.gold,
+    success: success ?? this.success,
+    onSuccess: onSuccess ?? this.onSuccess,
+    missed: missed ?? this.missed,
+  );
+
+  @override
+  SanctuaryColors lerp(ThemeExtension<SanctuaryColors>? other, double t) {
+    if (other is! SanctuaryColors) return this;
+    Color c(Color a, Color b) => Color.lerp(a, b, t)!;
+    return SanctuaryColors(
+      parchment: c(parchment, other.parchment),
+      parchmentDeep: c(parchmentDeep, other.parchmentDeep),
+      card: c(card, other.card),
+      ink: c(ink, other.ink),
+      inkSoft: c(inkSoft, other.inkSoft),
+      teal: c(teal, other.teal),
+      tealDeep: c(tealDeep, other.tealDeep),
+      onTeal: c(onTeal, other.onTeal),
+      gold: c(gold, other.gold),
+      success: c(success, other.success),
+      onSuccess: c(onSuccess, other.onSuccess),
+      missed: c(missed, other.missed),
+    );
+  }
+}
+
+/// `context.colors.ink` — the only way widgets should reach a colour.
+extension SanctuaryColorsX on BuildContext {
+  SanctuaryColors get colors =>
+      Theme.of(this).extension<SanctuaryColors>() ?? SanctuaryColors.light;
 }
 
 const kFontFamily = 'PlusJakartaSans';
@@ -20,22 +149,26 @@ const kFontFamily = 'PlusJakartaSans';
 /// For the reading timer: a countdown is not a disabled button, so it keeps
 /// the full teal even while it cannot be pressed. Everything else that is
 /// disabled looks disabled.
-final ButtonStyle kTimerButtonStyle = FilledButton.styleFrom(
-  disabledBackgroundColor: AppColors.teal,
-  disabledForegroundColor: Colors.white,
+ButtonStyle timerButtonStyle(SanctuaryColors c) => FilledButton.styleFrom(
+  disabledBackgroundColor: c.teal,
+  disabledForegroundColor: c.onTeal,
 );
 
-ThemeData buildAppTheme() {
+ThemeData buildAppTheme(Brightness brightness) {
+  final c = brightness == Brightness.dark
+      ? SanctuaryColors.dark
+      : SanctuaryColors.light;
+
   final scheme = ColorScheme.fromSeed(
-    seedColor: AppColors.teal,
-    brightness: Brightness.light,
-    surface: AppColors.parchment,
-    primary: AppColors.teal,
-    onPrimary: Colors.white,
-    secondary: AppColors.gold,
-    onSurface: AppColors.ink,
-    onSurfaceVariant: AppColors.inkSoft,
-    outlineVariant: AppColors.parchmentDeep,
+    seedColor: c.teal,
+    brightness: brightness,
+    surface: c.parchment,
+    primary: c.teal,
+    onPrimary: c.onTeal,
+    secondary: c.gold,
+    onSurface: c.ink,
+    onSurfaceVariant: c.inkSoft,
+    outlineVariant: c.parchmentDeep,
   );
   final base = ThemeData(
     colorScheme: scheme,
@@ -118,25 +251,22 @@ ThemeData buildAppTheme() {
           letterSpacing: 0.6,
         ),
       )
-      .apply(
-        fontFamily: kFontFamily,
-        bodyColor: AppColors.ink,
-        displayColor: AppColors.ink,
-      );
+      .apply(fontFamily: kFontFamily, bodyColor: c.ink, displayColor: c.ink);
 
   return base.copyWith(
+    extensions: [c],
     textTheme: text,
-    scaffoldBackgroundColor: AppColors.parchment,
+    scaffoldBackgroundColor: c.parchment,
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.parchment,
-      foregroundColor: AppColors.ink,
+      backgroundColor: c.parchment,
+      foregroundColor: c.ink,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
       titleTextStyle: text.titleLarge,
     ),
     cardTheme: CardThemeData(
-      color: AppColors.card,
+      color: c.card,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       margin: EdgeInsets.zero,
@@ -151,35 +281,35 @@ ThemeData buildAppTheme() {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.teal,
+        foregroundColor: c.teal,
         textStyle: text.labelLarge,
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.card,
-      hintStyle: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+      fillColor: c.card,
+      hintStyle: text.bodyLarge?.copyWith(color: c.inkSoft),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide.none,
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: AppColors.teal, width: 1.5),
+        borderSide: BorderSide(color: c.teal, width: 1.5),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: AppColors.parchmentDeep,
-      selectedColor: AppColors.teal,
-      disabledColor: AppColors.parchmentDeep,
+      backgroundColor: c.parchmentDeep,
+      selectedColor: c.teal,
+      disabledColor: c.parchmentDeep,
       labelStyle: text.bodyMedium?.copyWith(
         fontWeight: FontWeight.w600,
-        color: AppColors.ink,
+        color: c.ink,
       ),
       secondaryLabelStyle: text.bodyMedium?.copyWith(
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: c.onTeal,
       ),
       side: BorderSide.none,
       shape: const StadiumBorder(),
@@ -191,13 +321,10 @@ ThemeData buildAppTheme() {
         side: const WidgetStatePropertyAll(BorderSide.none),
         shape: const WidgetStatePropertyAll(StadiumBorder()),
         backgroundColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? AppColors.teal
-              : AppColors.parchmentDeep,
+          (s) => s.contains(WidgetState.selected) ? c.teal : c.parchmentDeep,
         ),
         foregroundColor: WidgetStateProperty.resolveWith(
-          (s) =>
-              s.contains(WidgetState.selected) ? Colors.white : AppColors.ink,
+          (s) => s.contains(WidgetState.selected) ? c.onTeal : c.ink,
         ),
         textStyle: WidgetStatePropertyAll(
           text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -205,49 +332,42 @@ ThemeData buildAppTheme() {
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: AppColors.parchment,
-      indicatorColor: AppColors.parchmentDeep,
+      backgroundColor: c.parchment,
+      indicatorColor: c.parchmentDeep,
       elevation: 0,
       height: 72,
       labelTextStyle: WidgetStateProperty.resolveWith(
         (s) => text.labelSmall?.copyWith(
           fontSize: 12,
-          color: s.contains(WidgetState.selected)
-              ? AppColors.teal
-              : AppColors.inkSoft,
+          color: s.contains(WidgetState.selected) ? c.teal : c.inkSoft,
         ),
       ),
       iconTheme: WidgetStateProperty.resolveWith(
         (s) => IconThemeData(
-          color: s.contains(WidgetState.selected)
-              ? AppColors.teal
-              : AppColors.inkSoft,
+          color: s.contains(WidgetState.selected) ? c.teal : c.inkSoft,
         ),
       ),
     ),
-    dividerTheme: const DividerThemeData(
-      color: AppColors.parchmentDeep,
-      thickness: 1,
-    ),
+    dividerTheme: DividerThemeData(color: c.parchmentDeep, thickness: 1),
     listTileTheme: ListTileThemeData(
-      iconColor: AppColors.inkSoft,
+      iconColor: c.inkSoft,
       titleTextStyle: text.bodyLarge,
-      subtitleTextStyle: text.bodySmall?.copyWith(color: AppColors.inkSoft),
+      subtitleTextStyle: text.bodySmall?.copyWith(color: c.inkSoft),
     ),
-    bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: AppColors.parchment,
-      shape: RoundedRectangleBorder(
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: c.parchment,
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
     ),
     dialogTheme: DialogThemeData(
-      backgroundColor: AppColors.parchment,
+      backgroundColor: c.parchment,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     ),
-    progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: AppColors.teal,
-      linearTrackColor: AppColors.parchmentDeep,
-      circularTrackColor: AppColors.parchmentDeep,
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: c.teal,
+      linearTrackColor: c.parchmentDeep,
+      circularTrackColor: c.parchmentDeep,
     ),
   );
 }

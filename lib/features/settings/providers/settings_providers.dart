@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers.dart';
@@ -30,6 +31,11 @@ class SettingsActions {
     await _ref.read(settingsProvider).setName(name);
     _ref.read(settingsRevisionProvider.notifier).bump();
     await _ref.read(reminderCoordinatorProvider).refresh();
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    await _ref.read(settingsProvider).setThemeMode(mode);
+    _ref.read(settingsRevisionProvider.notifier).bump();
   }
 
   Future<void> setPace(ReadingPace pace) async {

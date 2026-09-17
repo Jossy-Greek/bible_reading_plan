@@ -45,23 +45,25 @@ class _DayDetail extends ConsumerWidget {
             Text(
               'Day ${day.dayIndex + 1}  ·  ${day.chapterCount} chapters  ·  '
               '${(day.requiredDuration.inSeconds / 60).round()} min',
-              style: text.bodyMedium?.copyWith(color: AppColors.inkSoft),
+              style: text.bodyMedium?.copyWith(color: context.colors.inkSoft),
             ),
             const SizedBox(height: 20),
             switch (status) {
               DayStatus.completed => Row(
                 children: [
-                  const Icon(Icons.check_circle, color: AppColors.success),
+                  Icon(Icons.check_circle, color: context.colors.success),
                   const SizedBox(width: 8),
                   Text(
                     'Completed ✓',
-                    style: text.titleMedium?.copyWith(color: AppColors.success),
+                    style: text.titleMedium?.copyWith(
+                      color: context.colors.success,
+                    ),
                   ),
                 ],
               ),
               DayStatus.future => Text(
                 'Not yet — this reading opens on its day.',
-                style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                style: text.bodyLarge?.copyWith(color: context.colors.inkSoft),
               ),
               DayStatus.missed || DayStatus.todayPending => Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -70,7 +72,9 @@ class _DayDetail extends ConsumerWidget {
                     status == DayStatus.missed
                         ? 'Not completed. You can still read it.'
                         : 'Not completed yet.',
-                    style: text.bodyLarge?.copyWith(color: AppColors.inkSoft),
+                    style: text.bodyLarge?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   if (openSession != null &&
