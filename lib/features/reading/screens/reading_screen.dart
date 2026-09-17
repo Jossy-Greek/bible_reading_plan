@@ -8,11 +8,11 @@ import '../../../app/providers.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../app/widgets/sanctuary.dart';
 import '../../../core/time/format.dart';
-import '../../../core/verses.dart';
 import '../../../domain/session/reading_session_service.dart';
 import '../../../data/repositories/progress_repository.dart';
 import '../../../notifications/reminder_coordinator.dart';
 import '../providers/reading_providers.dart';
+import '../widgets/passage_view.dart';
 import 'completion_screen.dart';
 
 /// The focused reading screen. Nothing here decides anything: the remaining
@@ -71,6 +71,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final c = context.colors;
     final day = ref.watch(sessionDayProvider);
     final session = ref.watch(openSessionProvider).value;
     final timing = ref.watch(sessionTimingProvider);
@@ -87,219 +88,104 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
     }
 
     final passage = ref.watch(sessionPassageProvider);
-    final verse = passage == null
-        ? verseFor(day.dayIndex)
-        : verseForKey('${passage.bookId}${passage.fromChapter}');
     final done = timing.isComplete;
     final isToday = day.date == ref.watch(clockProvider).today();
 
     return Scaffold(
       appBar: SanctuaryAppBar(
-        title: 'Reading Session',
+        title: day.label,
         overline: passage != null
             ? 'One-time reading'
             : isToday
-            ? 'Today'
+            ? "Today's reading"
             : formatLongDate(day.date),
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back),
           style: IconButton.styleFrom(
-            backgroundColor: context.colors.parchmentDeep,
-            foregroundColor: context.colors.ink,
+            backgroundColor: c.parchmentDeep,
+            foregroundColor: c.ink,
           ),
         ),
         showStreak: false,
+        showProfile: false,
+        // The timer follows the reader down the page. It used to be a 72 px
+        // number above the text, which pushed scripture below the fold.
+        trailing: [
+          Semantics(
+            liveRegion: true,
+            label: done
+                ? 'Reading time complete'
+                : '${formatCountdown(timing.remaining)} remaining',
+            excludeSemantics: true,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: done
+                    ? c.success.withValues(alpha: 0.16)
+                    : c.parchmentDeep,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    done ? Icons.check_rounded : Icons.schedule,
+                    size: 15,
+                    color: done ? c.success : c.inkSoft,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    done ? 'Done' : formatCountdown(timing.remaining),
+                    style: text.titleSmall?.copyWith(
+                      color: done ? c.success : c.ink,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       body: Column(
         children: [
+          ThinBar(timing.progress, height: 3, color: done ? c.success : c.teal),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
               children: [
-                // What is being read.
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: done
-                                ? context.colors.success.withValues(alpha: 0.15)
-                                : context.colors.parchmentDeep,
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: done
-                                      ? context.colors.success
-                                      : context.colors.teal,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Overline(
-                                done
-                                    ? 'Reading time completed'
-                                    : 'Session in progress',
-                                color: done
-                                    ? context.colors.success
-                                    : context.colors.ink,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Overline(
-                          passage != null
-                              ? passage.title
-                              : isToday
-                              ? "Today's Reading"
-                              : 'Reading for ${formatLongDate(day.date)}',
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          day.label,
-                          textAlign: TextAlign.center,
-                          style: text.headlineLarge,
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.schedule,
-                              size: 18,
-                              color: context.colors.inkSoft,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Required time ${formatCountdown(timing.required)}',
-                              style: text.bodyLarge?.copyWith(
-                                color: context.colors.inkSoft,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                Text(passage?.title ?? day.label, style: text.headlineMedium),
+                const SizedBox(height: 6),
+                Text(
+                  '${day.verseCount} verses · '
+                  '${formatCountdown(timing.required)} of reading',
+                  style: text.bodyMedium?.copyWith(color: c.inkSoft),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
 
-                // The countdown.
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 36, 24, 28),
-                    child: Column(
-                      children: [
-                        Semantics(
-                          liveRegion: true,
-                          label: done
-                              ? 'Reading time complete'
-                              : '${formatCountdown(timing.remaining)} remaining',
-                          excludeSemantics: true,
-                          child: Text(
-                            done ? '✓' : formatCountdown(timing.remaining),
-                            style: text.displayLarge?.copyWith(
-                              fontSize: 72,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                              color: done
-                                  ? context.colors.success
-                                  : context.colors.ink,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Overline(done ? 'Complete' : 'Remaining'),
-                        const SizedBox(height: 28),
-                        ThinBar(
-                          timing.progress,
-                          color: done
-                              ? context.colors.success
-                              : context.colors.teal,
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text(
-                              '${formatCountdown(timing.elapsed)} elapsed',
-                              style: text.bodyMedium?.copyWith(
-                                color: context.colors.inkSoft,
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
-                              ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              '${(timing.progress * 100).round()}% read',
-                              style: text.bodyMedium?.copyWith(
-                                color: context.colors.inkSoft,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        ExcludeSemantics(
-                          child: Text(
-                            '❝',
-                            style: text.titleLarge?.copyWith(
-                              color: context.colors.gold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          verse.text,
-                          textAlign: TextAlign.center,
-                          style: text.titleLarge?.copyWith(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w400,
-                            height: 1.45,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Overline('— ${verse.ref}'),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
+                // The passage itself.
+                PassageView(assignments: day.assignments),
 
-                // Why the phone can be put down.
+                const SizedBox(height: 28),
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: context.colors.parchmentDeep.withValues(alpha: 0.6),
+                    color: c.parchmentDeep.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconWell(
-                        Icons.menu_book_outlined,
-                        color: context.colors.card,
-                      ),
+                      IconWell(Icons.menu_book_outlined, color: c.card),
                       const SizedBox(width: 14),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Reading a paper Bible?',
+                              'Prefer your own Bible?',
                               style: text.titleSmall,
                             ),
                             const SizedBox(height: 4),
@@ -308,13 +194,20 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                               'while the screen is off, and picks up exactly '
                               'where it was when you return.',
                               style: text.bodyMedium?.copyWith(
-                                color: context.colors.inkSoft,
+                                color: c.inkSoft,
                               ),
                             ),
                           ],
                         ),
                       ),
                     ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    'King James Version · public domain',
+                    style: text.bodySmall?.copyWith(color: c.inkSoft),
                   ),
                 ),
               ],
@@ -326,7 +219,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
             child: Column(
               children: [
                 FilledButton.icon(
-                  style: timerButtonStyle(context.colors),
+                  style: timerButtonStyle(c),
                   onPressed: done && !_completing ? _complete : null,
                   icon: Icon(
                     done ? Icons.check_rounded : Icons.hourglass_top_rounded,
@@ -342,9 +235,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                   done
                       ? 'Well done. Mark it and the day is yours.'
                       : '✦ Mark as Done unlocks at 0:00',
-                  style: text.bodySmall?.copyWith(
-                    color: context.colors.inkSoft,
-                  ),
+                  style: text.bodySmall?.copyWith(color: c.inkSoft),
                 ),
               ],
             ),

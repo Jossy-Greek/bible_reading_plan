@@ -38,6 +38,11 @@ class SettingsActions {
     _ref.read(settingsRevisionProvider.notifier).bump();
   }
 
+  Future<void> setScriptureSize(ScriptureSize size) async {
+    await _ref.read(settingsProvider).setScriptureSize(size);
+    _ref.read(settingsRevisionProvider.notifier).bump();
+  }
+
   Future<void> setPace(ReadingPace pace) async {
     await _ref.read(settingsProvider).setPace(pace);
     _ref.read(settingsRevisionProvider.notifier).bump();

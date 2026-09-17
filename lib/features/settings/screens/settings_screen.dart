@@ -201,6 +201,36 @@ class SettingsScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text('Scripture size'),
+                  const SizedBox(height: 4),
+                  Text(
+                    'How large the Bible text is drawn while you read. Your '
+                    "device's own text size still applies on top.",
+                    style: text.bodySmall?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  SegmentedButton<ScriptureSize>(
+                    showSelectedIcon: false,
+                    segments: [
+                      for (final s in ScriptureSize.values)
+                        ButtonSegment(value: s, label: Text(s.title)),
+                    ],
+                    selected: {settings.scriptureSize},
+                    onSelectionChanged: (s) =>
+                        actions.setScriptureSize(s.first),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   const Text('Theme'),
                   const SizedBox(height: 4),
                   Text(

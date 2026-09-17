@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/bible/bible_text.dart';
 import '../core/time/clock.dart';
 import '../data/db/database.dart';
 import '../data/prefs/settings_store.dart';
@@ -16,6 +17,9 @@ final sharedPreferencesProvider = Provider<SharedPreferences>(
 );
 
 final clockProvider = Provider<Clock>((_) => SystemClock());
+
+/// The bundled KJV. One instance for the app, so its book cache is shared.
+final bibleTextProvider = Provider<BibleText>((_) => BibleText());
 
 final settingsProvider = Provider<SettingsStore>(
   (ref) => SettingsStore(ref.watch(sharedPreferencesProvider)),

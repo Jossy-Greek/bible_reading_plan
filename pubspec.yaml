@@ -33,6 +33,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  # The KJV, one file per book. Loaded on demand and cached: a reading needs
+  # one book, not 4 MB of Bible.
+  assets:
+    - assets/bible/kjv/
+
   # Plus Jakarta Sans, bundled so the app stays offline. Variable fonts: the
   # single file carries every weight, Flutter picks the axis from FontWeight.
   fonts:

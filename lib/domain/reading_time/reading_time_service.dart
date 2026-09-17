@@ -10,6 +10,20 @@ enum ReadingPace {
   final int wordsPerMinute;
 }
 
+/// How large the scripture itself is drawn. Independent of the system font
+/// scale, which still applies on top: someone who has enlarged everything
+/// may still want the text larger again, and only here.
+enum ScriptureSize {
+  small(0.92, 'Small'),
+  medium(1.0, 'Medium'),
+  large(1.18, 'Large'),
+  xlarge(1.4, 'Larger');
+
+  const ScriptureSize(this.factor, this.title);
+  final double factor;
+  final String title;
+}
+
 /// Turns a reading assignment into a required duration.
 ///
 /// Verse-based (product decision 2026-09-14): every chapter's verse count is

@@ -19,6 +19,7 @@ class SettingsStore {
   static const _kNudgeMinutes = 'nudge_minutes_of_day';
   static const _kTimezone = 'last_timezone';
   static const _kThemeMode = 'theme_mode';
+  static const _kScriptureSize = 'scripture_size';
 
   String? get name => _prefs.getString(_kName);
   Future<void> setName(String v) => _prefs.setString(_kName, v.trim());
@@ -54,6 +55,13 @@ class SettingsStore {
   );
   Future<void> setThemeMode(ThemeMode m) =>
       _prefs.setString(_kThemeMode, m.name);
+
+  ScriptureSize get scriptureSize => ScriptureSize.values.firstWhere(
+    (s) => s.name == _prefs.getString(_kScriptureSize),
+    orElse: () => ScriptureSize.medium,
+  );
+  Future<void> setScriptureSize(ScriptureSize s) =>
+      _prefs.setString(_kScriptureSize, s.name);
 
   String? get lastTimezone => _prefs.getString(_kTimezone);
   Future<void> setLastTimezone(String v) => _prefs.setString(_kTimezone, v);

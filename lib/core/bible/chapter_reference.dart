@@ -115,3 +115,19 @@ List<ReadingAssignment> coalesce(List<ChapterReference> chapters) {
 /// "Genesis 49–50 · Exodus 1–3".
 String assignmentsLabel(List<ReadingAssignment> a) =>
     a.map((x) => x.label).join(' · ');
+
+/// "genesis:49-50,exodus:1-1" — a stable, comparable key for a day's
+/// reading. A `FutureProvider.family` keyed on the list itself would miss
+/// its cache on every rebuild, because Lists compare by identity.
+String assignmentsKey(List<ReadingAssignment> a) =>
+    a.map((x) => '${x.bookId}:${x.fromChapter}-${x.toChapter}').join(',');
+
+List<ReadingAssignment> assignmentsFromKey(String key) => [
+  for (final part in key.split(','))
+    if (part.isNotEmpty)
+      ReadingAssignment(
+        bookId: part.split(':').first,
+        fromChapter: int.parse(part.split(':').last.split('-').first),
+        toChapter: int.parse(part.split(':').last.split('-').last),
+      ),
+];

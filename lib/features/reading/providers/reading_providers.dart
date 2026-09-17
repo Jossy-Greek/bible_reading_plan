@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers.dart';
+import '../../../core/bible/bible_text.dart';
+import '../../../core/bible/chapter_reference.dart';
 import '../../../data/db/database.dart';
 import '../../../data/repositories/progress_repository.dart';
 import '../../../domain/passages/passage.dart';
@@ -75,6 +77,16 @@ final sessionPassageProvider = Provider<Passage?>((ref) {
 final completedPassagesProvider = StreamProvider<List<Passage>>(
   (ref) => ref.watch(progressRepositoryProvider).watchCompletedPassages(),
 );
+
+/// The text of a reading, keyed by [assignmentsKey] so the cache survives
+/// rebuilds. Kept alive across the session: re-reading a chapter the user
+/// just scrolled past must not re-decode the book.
+final passageTextProvider = FutureProvider.family<List<ChapterText>, String>((
+  ref,
+  key,
+) {
+  return ref.watch(bibleTextProvider).forAssignments(assignmentsFromKey(key));
+});
 
 final completedDayIndexesProvider = StreamProvider<Set<int>>((ref) {
   final plan = ref.watch(activePlanProvider).value;
