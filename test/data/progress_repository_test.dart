@@ -2,6 +2,7 @@ import 'package:bible_reading_plan/core/time/local_date.dart';
 import 'package:bible_reading_plan/data/db/database.dart';
 import 'package:bible_reading_plan/data/repositories/plan_repository.dart';
 import 'package:bible_reading_plan/data/repositories/progress_repository.dart';
+import 'package:bible_reading_plan/domain/passages/passage.dart';
 import 'package:bible_reading_plan/domain/plan/plan_definition.dart';
 import 'package:bible_reading_plan/domain/plan/reading_plan_generator.dart';
 import 'package:bible_reading_plan/domain/reading_time/reading_time_service.dart';
@@ -160,4 +161,75 @@ void main() {
     expect((await repo.watchStreak().first).current, 1);
     expect((await repo.watchStreak().first).longest, 3);
   });
+
+  test(
+    'a one-time reading records chapters and passage badges, not the day',
+    () async {
+      final plan = await PlanRepository(db).startPlan(
+        scope: const WholeBible(),
+        targetDays: 365,
+        startDate: start,
+        now: now,
+      );
+      final days = gen.generate(plan, ReadingPace.normal);
+      final sermon = passageById('sermon_on_the_mount');
+
+      final s = await repo.startPassageSession(
+        passage: sermon,
+        planId: plan.id,
+        required: const Duration(minutes: 12),
+        nowUtc: now,
+      );
+      final open = await repo.watchOpenSession().first;
+      expect(open, isNotNull);
+      expect(open!.dayIndex, -1);
+      expect(ProgressRepository.passageOf(open)?.reference, 'Matthew 5–7');
+
+      final r = await repo.completePassage(
+        sessionId: s.id,
+        passage: sermon,
+        plan: plan,
+        schedule: days,
+        nowUtc: now.add(const Duration(minutes: 13)),
+        nowLocal: DateTime(2026, 9, 14, 11, 13),
+        today: start,
+      );
+      // Chapters count; the plan day does not; the streak does not move.
+      expect(await repo.watchCompletedChapterCount().first, 3);
+      expect((await repo.watchCompletedChaptersByBook().first)['matthew'], 3);
+      expect(await repo.watchDayCompleted(plan.id, 0).first, isFalse);
+      expect(r.streak.current, 0);
+      expect(
+        r.newBadges.map((b) => b.id),
+        containsAll(['first_reading', 'first_passage', 'sermon_on_the_mount']),
+      );
+      expect(r.newBadges.map((b) => b.id), isNot(contains('early_bird')));
+      expect(
+        (await repo.watchCompletedPassages().first).single.title,
+        'Sermon on the Mount',
+      );
+
+      // A wider custom reading later also covers the Upper Room.
+      final s2 = await repo.startPassageSession(
+        passage: Passage.custom('john', 12, 17),
+        planId: plan.id,
+        required: const Duration(minutes: 30),
+        nowUtc: now,
+      );
+      final r2 = await repo.completePassage(
+        sessionId: s2.id,
+        passage: Passage.custom('john', 12, 17),
+        plan: plan,
+        schedule: days,
+        nowUtc: now.add(const Duration(hours: 1)),
+        nowLocal: DateTime(2026, 9, 14, 12),
+        today: start,
+      );
+      expect(r2.newBadges.map((b) => b.id), contains('upper_room'));
+      expect(
+        r2.newBadges.map((b) => b.id),
+        isNot(contains('sermon_on_the_mount')),
+      );
+    },
+  );
 }

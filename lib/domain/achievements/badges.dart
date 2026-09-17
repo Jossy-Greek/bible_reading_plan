@@ -88,6 +88,18 @@ class CompletedAfter extends BadgeRule {
   final int hour;
 }
 
+/// Number of completed one-time readings (any passage).
+class PassagesRead extends BadgeRule {
+  const PassagesRead(this.count);
+  final int count;
+}
+
+/// A completed one-time reading whose range covers this curated passage.
+class PassageCovered extends BadgeRule {
+  const PassageCovered(this.passageId);
+  final String passageId;
+}
+
 /// A calendar month in which every scheduled day was completed. Needs at
 /// least ten scheduled days in the month so a plan that starts on the 28th
 /// does not hand this out for three readings.
@@ -161,6 +173,7 @@ enum BadgeCategory {
   consistency('Consistency'),
   volume('Chapters'),
   library('Books & sections'),
+  passages('One-time readings'),
   milestone('Milestones');
 
   const BadgeCategory(this.title);
@@ -461,6 +474,64 @@ const List<BadgeDefinition> kBadges = [
     description: 'Finish Romans through Philemon',
     rule: SectionCompleted(BibleSection.paul),
     category: BadgeCategory.library,
+  ),
+
+  // ── One-time readings ──
+  BadgeDefinition(
+    id: 'first_passage',
+    title: 'Free Reading',
+    emoji: '🕊️',
+    description: 'Complete a one-time reading outside your plan',
+    rule: PassagesRead(1),
+    category: BadgeCategory.passages,
+  ),
+  BadgeDefinition(
+    id: 'passages_5',
+    title: 'Explorer',
+    emoji: '🗺️',
+    description: 'Complete 5 one-time readings',
+    rule: PassagesRead(5),
+    category: BadgeCategory.passages,
+  ),
+  BadgeDefinition(
+    id: 'passages_15',
+    title: 'Wayfarer',
+    emoji: '⛰️',
+    description: 'Complete 15 one-time readings',
+    rule: PassagesRead(15),
+    category: BadgeCategory.passages,
+  ),
+  BadgeDefinition(
+    id: 'sermon_on_the_mount',
+    title: 'Sermon on the Mount',
+    emoji: '🏔️',
+    description: 'Read Matthew 5–7 in one sitting',
+    rule: PassageCovered('sermon_on_the_mount'),
+    category: BadgeCategory.passages,
+  ),
+  BadgeDefinition(
+    id: 'upper_room',
+    title: 'The Upper Room',
+    emoji: '🍞',
+    description: 'Read John 13–17 in one sitting',
+    rule: PassageCovered('upper_room'),
+    category: BadgeCategory.passages,
+  ),
+  BadgeDefinition(
+    id: 'psalm_119',
+    title: 'The Longest Psalm',
+    emoji: '📜',
+    description: 'Read all 176 verses of Psalm 119 in one sitting',
+    rule: PassageCovered('psalm_119'),
+    category: BadgeCategory.passages,
+  ),
+  BadgeDefinition(
+    id: 'passion',
+    title: 'The Passion',
+    emoji: '✝️',
+    description: 'Read Matthew 26–28 in one sitting',
+    rule: PassageCovered('passion'),
+    category: BadgeCategory.passages,
   ),
 
   // ── Milestones ──

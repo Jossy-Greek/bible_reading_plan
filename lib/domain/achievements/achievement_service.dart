@@ -1,5 +1,6 @@
 import '../../core/bible/books.dart';
 import '../../core/time/local_date.dart';
+import '../passages/passage.dart';
 import '../plan/reading_day.dart';
 import '../progress/bible_progress.dart';
 import '../streak/streak_service.dart';
@@ -18,7 +19,11 @@ class AchievementFacts {
     required this.completedDay,
     required this.today,
     required this.completedAtLocal,
+    this.completedPassages = const [],
   });
+
+  /// Every completed one-time reading, as the range actually read.
+  final List<Passage> completedPassages;
 
   final BibleProgress progress;
 
@@ -34,14 +39,18 @@ class AchievementFacts {
   final List<ReadingDay> planSchedule;
   final Set<int> completedDayIndexes;
 
-  /// The day just completed.
+  /// The day just completed. For a one-time reading this is a synthetic day
+  /// (`dayIndex == -1`) and catch-up / comeback do not apply.
   final ReadingDay completedDay;
   final LocalDate today;
   final DateTime completedAtLocal;
 
-  bool get isCatchUp => today.isAfter(completedDay.date);
+  bool get isPlanDay => completedDay.dayIndex >= 0;
+
+  bool get isCatchUp => isPlanDay && today.isAfter(completedDay.date);
 
   bool get isComeback {
+    if (!isPlanDay) return false;
     final last = streakBefore.lastCompletedOn;
     if (last == null) return false;
     final gap = last.daysUntil(today) - 1; // missed days between
@@ -114,6 +123,10 @@ class AchievementService {
       CompletedAfter(:final hour) =>
         f.completedAtLocal.hour >= hour || f.completedAtLocal.hour < 4,
       PerfectMonth() => f.hasPerfectMonth,
+      PassagesRead(:final count) => f.completedPassages.length >= count,
+      PassageCovered(:final passageId) => f.completedPassages.any(
+        (p) => p.covers(passageById(passageId)),
+      ),
     };
   }
 }

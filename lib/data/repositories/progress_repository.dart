@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '../../core/time/local_date.dart';
 import '../../domain/achievements/achievement_service.dart';
 import '../../domain/achievements/badges.dart';
+import '../../domain/passages/passage.dart';
 import '../../domain/plan/plan_definition.dart';
 import '../../domain/progress/bible_progress.dart';
 import '../../domain/plan/reading_day.dart';
@@ -52,6 +53,99 @@ class ProgressRepository {
     return (_db.select(
       _db.readingSessions,
     )..where((s) => s.id.equals(id))).getSingle();
+  }
+
+  /// A one-time reading. `dayIndex` is -1; the passage rides on the row.
+  Future<ReadingSession> startPassageSession({
+    required Passage passage,
+    required int? planId,
+    required Duration required,
+    required DateTime nowUtc,
+  }) async {
+    final id = await _db
+        .into(_db.readingSessions)
+        .insert(
+          ReadingSessionsCompanion.insert(
+            planId: planId ?? 0,
+            dayIndex: -1,
+            startedAt: nowUtc,
+            requiredMs: required.inMilliseconds,
+            passageTitle: Value(passage.title),
+            passageBookId: Value(passage.bookId),
+            passageFrom: Value(passage.fromChapter),
+            passageTo: Value(passage.toChapter),
+          ),
+        );
+    return (_db.select(
+      _db.readingSessions,
+    )..where((s) => s.id.equals(id))).getSingle();
+  }
+
+  /// Completed one-time readings, newest first.
+  Stream<List<Passage>> watchCompletedPassages() =>
+      (_db.select(_db.readingSessions)
+            ..where(
+              (s) => s.passageBookId.isNotNull() & s.completedAt.isNotNull(),
+            )
+            ..orderBy([(s) => OrderingTerm.desc(s.completedAt)]))
+          .watch()
+          .map((rows) => [for (final r in rows) passageOf(r)!]);
+
+  /// The passage carried by a session row, or null for a plan day.
+  static Passage? passageOf(ReadingSession r) => r.passageBookId == null
+      ? null
+      : Passage(
+          title: r.passageTitle ?? '',
+          bookId: r.passageBookId!,
+          fromChapter: r.passageFrom!,
+          toChapter: r.passageTo!,
+        );
+
+  /// Marks a one-time reading done. Chapters are recorded (plan-independent,
+  /// so Progress and every chapter badge count them); no plan day completes
+  /// and the streak does not move — the streak is the *scheduled* habit.
+  Future<CompletionResult> completePassage({
+    required int sessionId,
+    required Passage passage,
+    required PlanDefinition? plan,
+    required List<ReadingDay> schedule,
+    required DateTime nowUtc,
+    required DateTime nowLocal,
+    required LocalDate today,
+  }) {
+    return _db.transaction(() async {
+      await (_db.update(_db.readingSessions)
+            ..where((s) => s.id.equals(sessionId)))
+          .write(ReadingSessionsCompanion(completedAt: Value(nowUtc)));
+      await _db.batch((b) {
+        b.insertAll(_db.chapterCompletions, [
+          for (final c in passage.assignment.chapters)
+            ChapterCompletionsCompanion.insert(
+              bookId: c.bookId,
+              chapter: c.chapter,
+              completedAt: nowUtc,
+            ),
+        ], mode: InsertMode.insertOrIgnore);
+      });
+      final streak = await _readStreak();
+      final synthetic = ReadingDay(
+        dayIndex: -1,
+        date: today,
+        assignments: [passage.assignment],
+        requiredDuration: Duration.zero,
+      );
+      final newBadges = await _awardBadges(
+        plan: plan,
+        schedule: schedule,
+        completedDay: synthetic,
+        streakBefore: streak,
+        streakAfter: streak,
+        today: today,
+        nowUtc: nowUtc,
+        nowLocal: nowLocal,
+      );
+      return CompletionResult(streak: streak, newBadges: newBadges);
+    });
   }
 
   Future<void> invalidateSession(int id, String reason) =>
@@ -187,47 +281,79 @@ class ProgressRepository {
             ),
           );
 
-      // Badges, from the facts as they now stand inside this transaction.
-      final planDone = await _completedDayIndexesOnce(plan.id);
-      final progress = BibleProgress.compute(
-        completedByBook: await _completedByBookOnce(),
-        daysCompleted: planDone.length,
-        totalDays: schedule.length,
-        planStart: plan.startDate,
+      final newBadges = await _awardBadges(
+        plan: plan,
+        schedule: schedule,
+        completedDay: day,
+        streakBefore: before,
+        streakAfter: after,
         today: today,
+        nowUtc: nowUtc,
+        nowLocal: nowLocal,
       );
-      final unlocked = await _unlockedIdsOnce();
-      final newBadges = _achievements.evaluate(
-        facts: AchievementFacts(
-          progress: progress,
-          streakBefore: before,
-          streakAfter: after,
-          totalDaysCompleted: await _totalDayCountOnce(),
-          planDaysCompleted: planDone.length,
-          planSchedule: schedule,
-          completedDayIndexes: planDone,
-          completedDay: day,
-          today: today,
-          completedAtLocal: nowLocal,
-        ),
-        unlocked: unlocked,
-      );
-      if (newBadges.isNotEmpty) {
-        await _db.batch((b) {
-          b.insertAll(_db.achievements, [
-            for (final badge in newBadges)
-              AchievementsCompanion.insert(
-                badgeId: badge.id,
-                unlockedAt: nowUtc,
-              ),
-          ], mode: InsertMode.insertOrIgnore);
-        });
-      }
       return CompletionResult(streak: after, newBadges: newBadges);
     });
   }
 
   // ── achievements ───────────────────────────────────────────────────────
+
+  /// Evaluate and store badges from the facts as they stand inside the
+  /// caller's transaction. Shared by plan-day and one-time completions.
+  Future<List<BadgeDefinition>> _awardBadges({
+    required PlanDefinition? plan,
+    required List<ReadingDay> schedule,
+    required ReadingDay completedDay,
+    required StreakState streakBefore,
+    required StreakState streakAfter,
+    required LocalDate today,
+    required DateTime nowUtc,
+    required DateTime nowLocal,
+  }) async {
+    final planDone = plan == null
+        ? <int>{}
+        : await _completedDayIndexesOnce(plan.id);
+    final progress = BibleProgress.compute(
+      completedByBook: await _completedByBookOnce(),
+      daysCompleted: planDone.length,
+      totalDays: schedule.length,
+      planStart: plan?.startDate ?? today,
+      today: today,
+    );
+    final newBadges = _achievements.evaluate(
+      facts: AchievementFacts(
+        progress: progress,
+        streakBefore: streakBefore,
+        streakAfter: streakAfter,
+        totalDaysCompleted: await _totalDayCountOnce(),
+        planDaysCompleted: planDone.length,
+        planSchedule: schedule,
+        completedDayIndexes: planDone,
+        completedDay: completedDay,
+        today: today,
+        completedAtLocal: nowLocal,
+        completedPassages: await _completedPassagesOnce(),
+      ),
+      unlocked: await _unlockedIdsOnce(),
+    );
+    if (newBadges.isNotEmpty) {
+      await _db.batch((b) {
+        b.insertAll(_db.achievements, [
+          for (final badge in newBadges)
+            AchievementsCompanion.insert(badgeId: badge.id, unlockedAt: nowUtc),
+        ], mode: InsertMode.insertOrIgnore);
+      });
+    }
+    return newBadges;
+  }
+
+  Future<List<Passage>> _completedPassagesOnce() async {
+    final rows =
+        await (_db.select(_db.readingSessions)..where(
+              (s) => s.passageBookId.isNotNull() & s.completedAt.isNotNull(),
+            ))
+            .get();
+    return [for (final r in rows) passageOf(r)!];
+  }
 
   Stream<Map<String, DateTime>> watchAchievements() => _db
       .select(_db.achievements)

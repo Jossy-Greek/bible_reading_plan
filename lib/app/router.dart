@@ -8,6 +8,7 @@ import '../features/home/screens/home_screen.dart';
 import '../features/onboarding/screens/name_screen.dart';
 import '../features/onboarding/screens/plan_screen.dart';
 import '../features/onboarding/screens/reminder_screen.dart';
+import '../features/passages/screens/passages_screen.dart';
 import '../features/progress/screens/progress_screen.dart';
 import '../features/reading/screens/completion_screen.dart';
 import '../features/reading/screens/reading_screen.dart';
@@ -80,6 +81,11 @@ GoRouter buildRouter(SettingsStore settings) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/passages',
+        parentNavigatorKey: _rootKey,
+        builder: (_, _) => const PassagesScreen(),
       ),
       // Over the shell: a reading is a focused, full-screen act.
       GoRoute(

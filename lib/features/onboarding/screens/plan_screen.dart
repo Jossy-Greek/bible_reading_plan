@@ -7,6 +7,7 @@ import '../../../core/bible/books.dart';
 import '../../../domain/plan/plan_definition.dart';
 import '../../settings/providers/settings_providers.dart';
 import '../providers/onboarding_controller.dart';
+import '../widgets/book_picker.dart';
 
 /// Scope × duration. The preview under the pickers shows the real daily load
 /// before the person commits, so "the whole Bible in a month" reads as
@@ -264,19 +265,11 @@ class _PlanScreenState extends ConsumerState<PlanScreen> {
     OnboardingController ctl,
     OnboardingState state,
   ) async {
-    final picked = await showModalBottomSheet<BibleBook>(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (ctx) => SizedBox(
-        height: MediaQuery.sizeOf(ctx).height * 0.8,
-        child: _BookPicker(
-          initialTestament: state.scope is BookScope
-              ? (state.scope as BookScope).testament
-              : Testament.old,
-          onPicked: (b) => Navigator.of(ctx).pop(b),
-        ),
-      ),
+    final picked = await showBookPicker(
+      context,
+      initialTestament: state.scope is BookScope
+          ? (state.scope as BookScope).testament
+          : Testament.old,
     );
     if (picked != null) {
       ctl.setScope(BookScope(picked.id));
@@ -320,59 +313,5 @@ class _PlanScreenState extends ConsumerState<PlanScreen> {
     } finally {
       if (mounted) setState(() => _saving = false);
     }
-  }
-}
-
-/// Two tabs, one per testament, so a 66-row list is never scrolled blind.
-class _BookPicker extends StatelessWidget {
-  const _BookPicker({required this.initialTestament, required this.onPicked});
-
-  final Testament initialTestament;
-  final ValueChanged<BibleBook> onPicked;
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: Testament.values.length,
-      initialIndex: Testament.values.indexOf(initialTestament),
-      child: Column(
-        children: [
-          TabBar(tabs: [for (final t in Testament.values) Tab(text: t.title)]),
-          Expanded(
-            child: TabBarView(
-              children: [
-                for (final t in Testament.values)
-                  _BookList(books: booksIn(t).toList(), onPicked: onPicked),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BookList extends StatelessWidget {
-  const _BookList({required this.books, required this.onPicked});
-
-  final List<BibleBook> books;
-  final ValueChanged<BibleBook> onPicked;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 24),
-      itemCount: books.length,
-      itemBuilder: (_, i) {
-        final b = books[i];
-        return ListTile(
-          title: Text(b.name),
-          subtitle: Text(
-            '${b.chapters} ${b.chapters == 1 ? 'chapter' : 'chapters'}',
-          ),
-          onTap: () => onPicked(b),
-        );
-      },
-    );
   }
 }

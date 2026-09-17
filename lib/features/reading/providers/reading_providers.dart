@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/providers.dart';
 import '../../../data/db/database.dart';
 import '../../../data/repositories/progress_repository.dart';
+import '../../../domain/passages/passage.dart';
 import '../../../domain/plan/reading_day.dart';
 import '../../../domain/plan/reading_plan_generator.dart';
 import '../../../domain/session/reading_session_service.dart';
@@ -43,13 +44,37 @@ final todayReadingProvider = Provider<ReadingDay?>((ref) {
 /// reading, an earlier one for a catch-up started from the calendar.
 final sessionDayProvider = Provider<ReadingDay?>((ref) {
   final session = ref.watch(openSessionProvider).value;
+  if (session == null) return null;
+
+  // A one-time reading: synthesize its day from the passage on the row. It
+  // is dated today and indexed -1 so nothing treats it as a plan day.
+  final passage = ProgressRepository.passageOf(session);
+  if (passage != null) {
+    return ReadingDay(
+      dayIndex: -1,
+      date: ref.watch(clockProvider).today(),
+      assignments: [passage.assignment],
+      requiredDuration: Duration(milliseconds: session.requiredMs),
+    );
+  }
+
   final plan = ref.watch(activePlanProvider).value;
   final days = ref.watch(scheduleProvider).value;
-  if (session == null || plan == null || days == null) return null;
+  if (plan == null || days == null) return null;
   if (session.planId != plan.id) return null;
   if (session.dayIndex < 0 || session.dayIndex >= days.length) return null;
   return days[session.dayIndex];
 });
+
+/// The passage of the open session, when it is a one-time reading.
+final sessionPassageProvider = Provider<Passage?>((ref) {
+  final session = ref.watch(openSessionProvider).value;
+  return session == null ? null : ProgressRepository.passageOf(session);
+});
+
+final completedPassagesProvider = StreamProvider<List<Passage>>(
+  (ref) => ref.watch(progressRepositoryProvider).watchCompletedPassages(),
+);
 
 final completedDayIndexesProvider = StreamProvider<Set<int>>((ref) {
   final plan = ref.watch(activePlanProvider).value;

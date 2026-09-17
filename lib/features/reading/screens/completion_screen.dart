@@ -9,10 +9,14 @@ class CompletionArgs {
     required this.label,
     required this.streak,
     required this.badgeIds,
+    this.isPassage = false,
   });
   final String label;
   final int streak;
   final List<String> badgeIds;
+
+  /// A one-time reading: no streak line, different headline.
+  final bool isPassage;
 }
 
 class CompletionScreen extends StatelessWidget {
@@ -35,16 +39,19 @@ class CompletionScreen extends StatelessWidget {
               Text('🎉', textAlign: TextAlign.center, style: text.displayLarge),
               const SizedBox(height: 16),
               Text(
-                "Today's reading is complete!",
+                args.isPassage
+                    ? 'Reading complete!'
+                    : "Today's reading is complete!",
                 textAlign: TextAlign.center,
                 style: text.headlineMedium,
               ),
               const SizedBox(height: 24),
-              Text(
-                '🔥 ${args.streak} day streak',
-                textAlign: TextAlign.center,
-                style: text.titleLarge,
-              ),
+              if (!args.isPassage)
+                Text(
+                  '🔥 ${args.streak} day streak',
+                  textAlign: TextAlign.center,
+                  style: text.titleLarge,
+                ),
               const SizedBox(height: 12),
               Text(
                 '${args.label} ✓',

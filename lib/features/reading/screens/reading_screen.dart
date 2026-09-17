@@ -10,6 +10,7 @@ import '../../../app/widgets/sanctuary.dart';
 import '../../../core/time/format.dart';
 import '../../../core/verses.dart';
 import '../../../domain/session/reading_session_service.dart';
+import '../../../data/repositories/progress_repository.dart';
 import '../../../notifications/reminder_coordinator.dart';
 import '../providers/reading_providers.dart';
 import 'completion_screen.dart';
@@ -85,6 +86,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
       return _ClockMovedBack(sessionId: session.id);
     }
 
+    final passage = ref.watch(sessionPassageProvider);
     final verse = verseFor(day.dayIndex);
     final done = timing.isComplete;
     final isToday = day.date == ref.watch(clockProvider).today();
@@ -92,7 +94,11 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
     return Scaffold(
       appBar: SanctuaryAppBar(
         title: 'Reading Session',
-        overline: isToday ? 'Today' : formatLongDate(day.date),
+        overline: passage != null
+            ? 'One-time reading'
+            : isToday
+            ? 'Today'
+            : formatLongDate(day.date),
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back),
@@ -151,7 +157,9 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
                         ),
                         const SizedBox(height: 16),
                         Overline(
-                          isToday
+                          passage != null
+                              ? passage.title
+                              : isToday
                               ? "Today's Reading"
                               : 'Reading for ${formatLongDate(day.date)}',
                         ),
@@ -329,30 +337,48 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
     final plan = ref.read(activePlanProvider).value;
     final day = ref.read(sessionDayProvider);
     final session = ref.read(openSessionProvider).value;
-    if (plan == null || day == null || session == null) return;
+    final passage = ref.read(sessionPassageProvider);
+    if (day == null || session == null) return;
+    if (passage == null && plan == null) return;
     setState(() => _completing = true);
     final clock = ref.read(clockProvider);
+    final schedule = ref.read(scheduleProvider).value ?? const [];
     try {
-      final result = await ref
-          .read(progressRepositoryProvider)
-          .completeDay(
-            plan: plan,
-            day: day,
-            sessionId: session.id,
-            nowUtc: clock.nowUtc(),
-            nowLocal: clock.nowLocal(),
-            today: clock.today(),
-            schedule: ref.read(scheduleProvider).value ?? const [],
-          );
-      // Today is done: the evening nudge must not fire tonight.
-      unawaited(ref.read(reminderCoordinatorProvider).refresh());
+      final repo = ref.read(progressRepositoryProvider);
+      final CompletionResult result;
+      if (passage != null) {
+        result = await repo.completePassage(
+          sessionId: session.id,
+          passage: passage,
+          plan: plan,
+          schedule: schedule,
+          nowUtc: clock.nowUtc(),
+          nowLocal: clock.nowLocal(),
+          today: clock.today(),
+        );
+      } else {
+        result = await repo.completeDay(
+          plan: plan!,
+          day: day,
+          sessionId: session.id,
+          nowUtc: clock.nowUtc(),
+          nowLocal: clock.nowLocal(),
+          today: clock.today(),
+          schedule: schedule,
+        );
+        // Today is done: the evening nudge must not fire tonight.
+        unawaited(ref.read(reminderCoordinatorProvider).refresh());
+      }
       if (mounted) {
         context.go(
           '/reading/complete',
           extra: CompletionArgs(
-            label: day.label,
+            label: passage != null
+                ? '${passage.title} · ${passage.reference}'
+                : day.label,
             streak: result.streak.current,
             badgeIds: [for (final b in result.newBadges) b.id],
+            isPassage: passage != null,
           ),
         );
       }

@@ -49,6 +49,15 @@ class ReadingSessions extends Table {
   IntColumn get foregroundMs => integer().withDefault(const Constant(0))();
   DateTimeColumn get completedAt => dateTime().nullable()();
   TextColumn get invalidatedReason => text().nullable()();
+
+  /// A one-time reading outside the plan ("Sermon on the Mount", Matthew
+  /// 5–7). When set, `dayIndex` is -1 and the session is not a plan day: its
+  /// chapters still land in `chapter_completions`, it does not complete a
+  /// `day_completions` row and does not move the streak.
+  TextColumn get passageTitle => text().nullable()();
+  TextColumn get passageBookId => text().nullable()();
+  IntColumn get passageFrom => integer().nullable()();
+  IntColumn get passageTo => integer().nullable()();
 }
 
 class Streaks extends Table {
@@ -86,7 +95,20 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.withExecutor(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        // v2: one-time readings ride on the sessions table.
+        await m.addColumn(readingSessions, readingSessions.passageTitle);
+        await m.addColumn(readingSessions, readingSessions.passageBookId);
+        await m.addColumn(readingSessions, readingSessions.passageFrom);
+        await m.addColumn(readingSessions, readingSessions.passageTo);
+      }
+    },
+  );
 
   /// Every table, in one transaction. The "clear local data" action.
   Future<void> clearAll() => transaction(() async {

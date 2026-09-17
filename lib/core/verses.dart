@@ -29,4 +29,4 @@ const List<({String text, String ref})> kVerses = [
 ];
 
 ({String text, String ref}) verseFor(int index) =>
-    kVerses[index % kVerses.length];
+    kVerses[index.abs() % kVerses.length];

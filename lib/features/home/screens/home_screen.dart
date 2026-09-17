@@ -161,6 +161,43 @@ class HomeScreen extends ConsumerWidget {
           ],
 
           const SizedBox(height: 16),
+          // Outside the plan: a passage on its own, timed like any reading.
+          Card(
+            child: InkWell(
+              onTap: () => context.push('/passages'),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    const IconWell(Icons.explore_outlined),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Overline('One-time reading'),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Read a passage outside your plan',
+                            style: text.titleSmall,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Sermon on the Mount, Psalm 23, any chapters you choose',
+                            style: text.bodySmall?.copyWith(
+                              color: AppColors.inkSoft,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right, color: AppColors.inkSoft),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
           Row(
             children: [
               Expanded(

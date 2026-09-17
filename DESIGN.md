@@ -168,8 +168,8 @@ Catch-up (completing yesterday's reading today) completes the chapters and the d
 
 ## 9. Badge system — `AchievementService` (expanded 2026-09-14)
 
-36 badges in six categories, each a `BadgeDefinition` with a rule from a sealed
-set of fourteen kinds. `evaluate(facts, unlocked)` runs inside the completion
+43 badges in seven categories, each a `BadgeDefinition` with a rule from a sealed
+set of eighteen kinds. `evaluate(facts, unlocked)` runs inside the completion
 transaction and returns the newly earned list; a badge is never re-awarded.
 
 | Category | Badges | Why |
@@ -179,6 +179,7 @@ transaction and returns the newly earned list; a badge is never re-awarded.
 | Consistency | 30 · 100 · 365 total reading days · Perfect Month (every scheduled day in a calendar month with ≥10 of them) | Counts still climb after a streak breaks |
 | Chapters | 50 · 100 · 250 · 500 · Halfway (595) · 1,000 | Something to earn between streak milestones on a long plan |
 | Books & sections | First Book · Ten Books · Half the Library (33) · The Law · The Histories · Psalms · Wisdom · The Prophets · The Gospels · Paul's Letters | Completion has shape; the canon's own groupings give it names |
+| One-time readings | Free Reading (first) · Explorer (5) · Wayfarer (15) · Sermon on the Mount · The Upper Room · The Longest Psalm · The Passion | Reading outside the plan is still reading; the four named ones reward a whole discourse in one sitting (see §14b) |
 | Milestones | Plan Complete · New Testament · Old Testament · Bible Completed | The top of the ladder |
 
 Facts available to a rule (`AchievementFacts`): Bible progress by book, the
@@ -258,6 +259,31 @@ test/  domain/ (generator, time, session, streak, badges)  data/ (repositories a
 | Notification permission denied | Toggle explains, links to system settings, no re-prompt |
 | Scheduling failure | Logged, retried on next launch, never blocks completion |
 | Timezone change | Detected on resume, notifications rescheduled, `today()` follows device zone |
+
+## 14b. One-time readings (added 2026-09-14)
+
+A passage read on its own, outside the plan — "Sermon on the Mount" is Matthew
+5–7. Owner's ask: let the user read such a thing as a single timed sitting, and
+let it count toward badges as well as the plan.
+
+- **Model:** a `Passage` is one contiguous chapter range in one book. Fifteen
+  curated passages (`kPassages`) plus any custom range via the book picker and a
+  from/to chapter dialog.
+- **Storage:** no new table. A one-time reading is a `reading_sessions` row with
+  `day_index = -1` and four nullable passage columns (schema **v2**, `addColumn`
+  migration from v1, tested against a real v1 file).
+- **Completion:** chapters go to `chapter_completions` (plan-independent), so
+  Progress and every chapter/book/section badge count them. **No `day_completions`
+  row and the streak does not move** — the streak is the *scheduled* habit. Catch-up
+  and comeback badges do not apply to a passage.
+- **Badges:** new category "One-time readings" — Free Reading (first), Explorer (5),
+  Wayfarer (15), and four *covered* badges (Sermon on the Mount, The Upper Room,
+  The Longest Psalm, The Passion). "Covered" means a completed passage in the
+  same book whose range contains the curated one, so Matthew 4–8 earns the Sermon.
+- **UI:** Home card → `/passages` picker (curated list with ✓ for those already
+  read, estimated minutes; custom range); the reading screen shows the passage
+  title; the celebration omits the streak line. One open reading at a time — the
+  picker points at it rather than starting a second.
 
 ## 15. MVP order — all five phases shipped 2026-09-14
 
