@@ -22,7 +22,8 @@ void main() {
         expect(
           text.verseCount,
           expected[c - 1],
-          reason: '${book.name} $c: text has ${text.verseCount} verses, '
+          reason:
+              '${book.name} $c: text has ${text.verseCount} verses, '
               'the table used for reading times says ${expected[c - 1]}',
         );
         expect(
@@ -45,15 +46,33 @@ void main() {
     );
     expect(await bible.verse('john', 11, 35), 'Jesus wept.');
     // The shortest and longest chapters in the Bible.
-    expect((await bible.chapter(const ChapterReference('psalms', 117))).verseCount, 2);
-    expect((await bible.chapter(const ChapterReference('psalms', 119))).verseCount, 176);
-    expect((await bible.chapter(const ChapterReference('3_john', 1))).verseCount, 14);
-    expect((await bible.chapter(const ChapterReference('revelation', 22))).verseCount, 21);
+    expect(
+      (await bible.chapter(const ChapterReference('psalms', 117))).verseCount,
+      2,
+    );
+    expect(
+      (await bible.chapter(const ChapterReference('psalms', 119))).verseCount,
+      176,
+    );
+    expect(
+      (await bible.chapter(const ChapterReference('3_john', 1))).verseCount,
+      14,
+    );
+    expect(
+      (await bible.chapter(
+        const ChapterReference('revelation', 22),
+      )).verseCount,
+      21,
+    );
   });
 
   test('an assignment resolves to its chapters in reading order', () async {
     final texts = await bible.forAssignments([
-      const ReadingAssignment(bookId: 'genesis', fromChapter: 49, toChapter: 50),
+      const ReadingAssignment(
+        bookId: 'genesis',
+        fromChapter: 49,
+        toChapter: 50,
+      ),
       const ReadingAssignment(bookId: 'exodus', fromChapter: 1, toChapter: 1),
     ]);
     expect(texts.map((t) => t.reference.toString()), [
@@ -61,7 +80,10 @@ void main() {
       'Genesis 50',
       'Exodus 1',
     ]);
-    expect(texts.first.verses.first, startsWith('And Jacob called unto his sons'));
+    expect(
+      texts.first.verses.first,
+      startsWith('And Jacob called unto his sons'),
+    );
   });
 
   test('a book is decoded once, however many chapters are asked for', () async {

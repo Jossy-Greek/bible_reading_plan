@@ -27,6 +27,7 @@ class HomeScreen extends ConsumerWidget {
     final today = ref.watch(todayReadingProvider);
     final cal = ref.watch(planCalendarProvider);
     final badges = ref.watch(unlockedBadgesProvider).value ?? const {};
+    final reflections = ref.watch(reflectionsProvider).value?.length ?? 0;
 
     final now = clock.nowLocal();
     final greeting = now.hour < 12
@@ -163,40 +164,30 @@ class HomeScreen extends ConsumerWidget {
           ],
 
           const SizedBox(height: 16),
-          // Outside the plan: a passage on its own, timed like any reading.
+          // Two ways out of the plan: read something else, or look back at
+          // what you wrote. One card, so Home does not grow a row per verb.
           Card(
-            child: InkWell(
-              onTap: () => context.push('/passages'),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    IconWell(Icons.explore_outlined),
-                    SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Overline('One-time reading'),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Read a passage outside your plan',
-                            style: text.titleSmall,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Sermon on the Mount, Psalm 23, any chapters you choose',
-                            style: text.bodySmall?.copyWith(
-                              color: context.colors.inkSoft,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.chevron_right, color: context.colors.inkSoft),
-                  ],
+            child: Column(
+              children: [
+                _HomeRow(
+                  icon: Icons.explore_outlined,
+                  overline: 'One-time reading',
+                  title: 'Read a passage outside your plan',
+                  subtitle:
+                      'Sermon on the Mount, Psalm 23, any chapters you choose',
+                  onTap: () => context.push('/passages'),
                 ),
-              ),
+                const Divider(height: 1, indent: 20, endIndent: 20),
+                _HomeRow(
+                  icon: Icons.edit_note_rounded,
+                  overline: 'Reflections',
+                  title: reflections == 0
+                      ? 'Write down what stands out'
+                      : '$reflections ${reflections == 1 ? 'reflection' : 'reflections'} written',
+                  subtitle: 'Yours alone, kept on this device',
+                  onTap: () => context.push('/journal'),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 16),
@@ -262,6 +253,58 @@ class _QuickTile extends StatelessWidget {
               Text(value, style: text.titleSmall),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A tappable row inside a Home card: icon well, overline, title, subtitle.
+class _HomeRow extends StatelessWidget {
+  const _HomeRow({
+    required this.icon,
+    required this.overline,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String overline;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            IconWell(icon),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Overline(overline),
+                  const SizedBox(height: 2),
+                  Text(title, style: text.titleSmall),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: text.bodySmall?.copyWith(
+                      color: context.colors.inkSoft,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: context.colors.inkSoft),
+          ],
         ),
       ),
     );

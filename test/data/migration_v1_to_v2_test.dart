@@ -7,9 +7,10 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite3/sqlite3.dart' as sqlite;
 
-/// The owner's phone holds a schema-1 database. This opens one, exactly as
-/// drift created it at v1, with the v2 code and proves the passage columns
-/// arrive and work.
+/// Opens a database exactly as drift created it at v1 and proves the passage
+/// columns arrive and work. The version it lands on is whatever the app's
+/// current schema is — `migration_v2_to_v3_test.dart` covers the later steps
+/// and the data they must preserve.
 void main() {
   test('a v1 database upgrades to v2 and stores a passage session', () async {
     final dir = await Directory.systemTemp.createTemp('brp_mig');
@@ -65,7 +66,7 @@ void main() {
       (await db.customSelect('PRAGMA user_version').getSingle()).read<int>(
         'user_version',
       ),
-      2,
+      db.schemaVersion,
     );
 
     await db.close();

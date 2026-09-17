@@ -54,6 +54,16 @@ class ReadingSessions extends Table {
   /// 5–7). When set, `dayIndex` is -1 and the session is not a plan day: its
   /// chapters still land in `chapter_completions`, it does not complete a
   /// `day_completions` row and does not move the streak.
+  /// What the reader wrote afterwards, if anything. A reflection belongs to
+  /// the sitting, not the day, so a one-time reading can carry one too.
+  TextColumn get note => text().nullable()();
+
+  /// "Mark 9–10", stamped when the sitting starts. Recomputing it later from
+  /// the schedule would lie: changing the plan or its start date moves which
+  /// chapters day 4 holds, and a journal entry must keep saying what was
+  /// actually read.
+  TextColumn get reference => text().nullable()();
+
   TextColumn get passageTitle => text().nullable()();
   TextColumn get passageBookId => text().nullable()();
   IntColumn get passageFrom => integer().nullable()();
@@ -95,7 +105,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.withExecutor(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -106,6 +116,11 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(readingSessions, readingSessions.passageBookId);
         await m.addColumn(readingSessions, readingSessions.passageFrom);
         await m.addColumn(readingSessions, readingSessions.passageTo);
+      }
+      if (from < 3) {
+        // v3: a reflection on the sitting, and what was read.
+        await m.addColumn(readingSessions, readingSessions.note);
+        await m.addColumn(readingSessions, readingSessions.reference);
       }
     },
   );

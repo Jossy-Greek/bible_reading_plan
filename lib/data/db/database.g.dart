@@ -1162,6 +1162,26 @@ class $ReadingSessionsTable extends ReadingSessions
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _referenceMeta = const VerificationMeta(
+    'reference',
+  );
+  @override
+  late final GeneratedColumn<String> reference = GeneratedColumn<String>(
+    'reference',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _passageTitleMeta = const VerificationMeta(
     'passageTitle',
   );
@@ -1216,6 +1236,8 @@ class $ReadingSessionsTable extends ReadingSessions
     foregroundMs,
     completedAt,
     invalidatedReason,
+    note,
+    reference,
     passageTitle,
     passageBookId,
     passageFrom,
@@ -1295,6 +1317,18 @@ class $ReadingSessionsTable extends ReadingSessions
         ),
       );
     }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    if (data.containsKey('reference')) {
+      context.handle(
+        _referenceMeta,
+        reference.isAcceptableOrUnknown(data['reference']!, _referenceMeta),
+      );
+    }
     if (data.containsKey('passage_title')) {
       context.handle(
         _passageTitleMeta,
@@ -1369,6 +1403,14 @@ class $ReadingSessionsTable extends ReadingSessions
         DriftSqlType.string,
         data['${effectivePrefix}invalidated_reason'],
       ),
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+      reference: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference'],
+      ),
       passageTitle: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}passage_title'],
@@ -1408,6 +1450,15 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
   /// 5–7). When set, `dayIndex` is -1 and the session is not a plan day: its
   /// chapters still land in `chapter_completions`, it does not complete a
   /// `day_completions` row and does not move the streak.
+  /// What the reader wrote afterwards, if anything. A reflection belongs to
+  /// the sitting, not the day, so a one-time reading can carry one too.
+  final String? note;
+
+  /// "Mark 9–10", stamped when the sitting starts. Recomputing it later from
+  /// the schedule would lie: changing the plan or its start date moves which
+  /// chapters day 4 holds, and a journal entry must keep saying what was
+  /// actually read.
+  final String? reference;
   final String? passageTitle;
   final String? passageBookId;
   final int? passageFrom;
@@ -1421,6 +1472,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
     required this.foregroundMs,
     this.completedAt,
     this.invalidatedReason,
+    this.note,
+    this.reference,
     this.passageTitle,
     this.passageBookId,
     this.passageFrom,
@@ -1440,6 +1493,12 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
     }
     if (!nullToAbsent || invalidatedReason != null) {
       map['invalidated_reason'] = Variable<String>(invalidatedReason);
+    }
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    if (!nullToAbsent || reference != null) {
+      map['reference'] = Variable<String>(reference);
     }
     if (!nullToAbsent || passageTitle != null) {
       map['passage_title'] = Variable<String>(passageTitle);
@@ -1470,6 +1529,10 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
       invalidatedReason: invalidatedReason == null && nullToAbsent
           ? const Value.absent()
           : Value(invalidatedReason),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      reference: reference == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reference),
       passageTitle: passageTitle == null && nullToAbsent
           ? const Value.absent()
           : Value(passageTitle),
@@ -1501,6 +1564,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
       invalidatedReason: serializer.fromJson<String?>(
         json['invalidatedReason'],
       ),
+      note: serializer.fromJson<String?>(json['note']),
+      reference: serializer.fromJson<String?>(json['reference']),
       passageTitle: serializer.fromJson<String?>(json['passageTitle']),
       passageBookId: serializer.fromJson<String?>(json['passageBookId']),
       passageFrom: serializer.fromJson<int?>(json['passageFrom']),
@@ -1519,6 +1584,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
       'foregroundMs': serializer.toJson<int>(foregroundMs),
       'completedAt': serializer.toJson<DateTime?>(completedAt),
       'invalidatedReason': serializer.toJson<String?>(invalidatedReason),
+      'note': serializer.toJson<String?>(note),
+      'reference': serializer.toJson<String?>(reference),
       'passageTitle': serializer.toJson<String?>(passageTitle),
       'passageBookId': serializer.toJson<String?>(passageBookId),
       'passageFrom': serializer.toJson<int?>(passageFrom),
@@ -1535,6 +1602,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
     int? foregroundMs,
     Value<DateTime?> completedAt = const Value.absent(),
     Value<String?> invalidatedReason = const Value.absent(),
+    Value<String?> note = const Value.absent(),
+    Value<String?> reference = const Value.absent(),
     Value<String?> passageTitle = const Value.absent(),
     Value<String?> passageBookId = const Value.absent(),
     Value<int?> passageFrom = const Value.absent(),
@@ -1550,6 +1619,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
     invalidatedReason: invalidatedReason.present
         ? invalidatedReason.value
         : this.invalidatedReason,
+    note: note.present ? note.value : this.note,
+    reference: reference.present ? reference.value : this.reference,
     passageTitle: passageTitle.present ? passageTitle.value : this.passageTitle,
     passageBookId: passageBookId.present
         ? passageBookId.value
@@ -1575,6 +1646,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
       invalidatedReason: data.invalidatedReason.present
           ? data.invalidatedReason.value
           : this.invalidatedReason,
+      note: data.note.present ? data.note.value : this.note,
+      reference: data.reference.present ? data.reference.value : this.reference,
       passageTitle: data.passageTitle.present
           ? data.passageTitle.value
           : this.passageTitle,
@@ -1599,6 +1672,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
           ..write('foregroundMs: $foregroundMs, ')
           ..write('completedAt: $completedAt, ')
           ..write('invalidatedReason: $invalidatedReason, ')
+          ..write('note: $note, ')
+          ..write('reference: $reference, ')
           ..write('passageTitle: $passageTitle, ')
           ..write('passageBookId: $passageBookId, ')
           ..write('passageFrom: $passageFrom, ')
@@ -1617,6 +1692,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
     foregroundMs,
     completedAt,
     invalidatedReason,
+    note,
+    reference,
     passageTitle,
     passageBookId,
     passageFrom,
@@ -1634,6 +1711,8 @@ class ReadingSession extends DataClass implements Insertable<ReadingSession> {
           other.foregroundMs == this.foregroundMs &&
           other.completedAt == this.completedAt &&
           other.invalidatedReason == this.invalidatedReason &&
+          other.note == this.note &&
+          other.reference == this.reference &&
           other.passageTitle == this.passageTitle &&
           other.passageBookId == this.passageBookId &&
           other.passageFrom == this.passageFrom &&
@@ -1649,6 +1728,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
   final Value<int> foregroundMs;
   final Value<DateTime?> completedAt;
   final Value<String?> invalidatedReason;
+  final Value<String?> note;
+  final Value<String?> reference;
   final Value<String?> passageTitle;
   final Value<String?> passageBookId;
   final Value<int?> passageFrom;
@@ -1662,6 +1743,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
     this.foregroundMs = const Value.absent(),
     this.completedAt = const Value.absent(),
     this.invalidatedReason = const Value.absent(),
+    this.note = const Value.absent(),
+    this.reference = const Value.absent(),
     this.passageTitle = const Value.absent(),
     this.passageBookId = const Value.absent(),
     this.passageFrom = const Value.absent(),
@@ -1676,6 +1759,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
     this.foregroundMs = const Value.absent(),
     this.completedAt = const Value.absent(),
     this.invalidatedReason = const Value.absent(),
+    this.note = const Value.absent(),
+    this.reference = const Value.absent(),
     this.passageTitle = const Value.absent(),
     this.passageBookId = const Value.absent(),
     this.passageFrom = const Value.absent(),
@@ -1693,6 +1778,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
     Expression<int>? foregroundMs,
     Expression<DateTime>? completedAt,
     Expression<String>? invalidatedReason,
+    Expression<String>? note,
+    Expression<String>? reference,
     Expression<String>? passageTitle,
     Expression<String>? passageBookId,
     Expression<int>? passageFrom,
@@ -1707,6 +1794,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
       if (foregroundMs != null) 'foreground_ms': foregroundMs,
       if (completedAt != null) 'completed_at': completedAt,
       if (invalidatedReason != null) 'invalidated_reason': invalidatedReason,
+      if (note != null) 'note': note,
+      if (reference != null) 'reference': reference,
       if (passageTitle != null) 'passage_title': passageTitle,
       if (passageBookId != null) 'passage_book_id': passageBookId,
       if (passageFrom != null) 'passage_from': passageFrom,
@@ -1723,6 +1812,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
     Value<int>? foregroundMs,
     Value<DateTime?>? completedAt,
     Value<String?>? invalidatedReason,
+    Value<String?>? note,
+    Value<String?>? reference,
     Value<String?>? passageTitle,
     Value<String?>? passageBookId,
     Value<int?>? passageFrom,
@@ -1737,6 +1828,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
       foregroundMs: foregroundMs ?? this.foregroundMs,
       completedAt: completedAt ?? this.completedAt,
       invalidatedReason: invalidatedReason ?? this.invalidatedReason,
+      note: note ?? this.note,
+      reference: reference ?? this.reference,
       passageTitle: passageTitle ?? this.passageTitle,
       passageBookId: passageBookId ?? this.passageBookId,
       passageFrom: passageFrom ?? this.passageFrom,
@@ -1771,6 +1864,12 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
     if (invalidatedReason.present) {
       map['invalidated_reason'] = Variable<String>(invalidatedReason.value);
     }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (reference.present) {
+      map['reference'] = Variable<String>(reference.value);
+    }
     if (passageTitle.present) {
       map['passage_title'] = Variable<String>(passageTitle.value);
     }
@@ -1797,6 +1896,8 @@ class ReadingSessionsCompanion extends UpdateCompanion<ReadingSession> {
           ..write('foregroundMs: $foregroundMs, ')
           ..write('completedAt: $completedAt, ')
           ..write('invalidatedReason: $invalidatedReason, ')
+          ..write('note: $note, ')
+          ..write('reference: $reference, ')
           ..write('passageTitle: $passageTitle, ')
           ..write('passageBookId: $passageBookId, ')
           ..write('passageFrom: $passageFrom, ')
@@ -3006,6 +3107,8 @@ typedef $$ReadingSessionsTableCreateCompanionBuilder =
       Value<int> foregroundMs,
       Value<DateTime?> completedAt,
       Value<String?> invalidatedReason,
+      Value<String?> note,
+      Value<String?> reference,
       Value<String?> passageTitle,
       Value<String?> passageBookId,
       Value<int?> passageFrom,
@@ -3021,6 +3124,8 @@ typedef $$ReadingSessionsTableUpdateCompanionBuilder =
       Value<int> foregroundMs,
       Value<DateTime?> completedAt,
       Value<String?> invalidatedReason,
+      Value<String?> note,
+      Value<String?> reference,
       Value<String?> passageTitle,
       Value<String?> passageBookId,
       Value<int?> passageFrom,
@@ -3073,6 +3178,16 @@ class $$ReadingSessionsTableFilterComposer
 
   ColumnFilters<String> get invalidatedReason => $composableBuilder(
     column: $table.invalidatedReason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reference => $composableBuilder(
+    column: $table.reference,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3146,6 +3261,16 @@ class $$ReadingSessionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get passageTitle => $composableBuilder(
     column: $table.passageTitle,
     builder: (column) => ColumnOrderings(column),
@@ -3207,6 +3332,12 @@ class $$ReadingSessionsTableAnnotationComposer
     column: $table.invalidatedReason,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<String> get reference =>
+      $composableBuilder(column: $table.reference, builder: (column) => column);
 
   GeneratedColumn<String> get passageTitle => $composableBuilder(
     column: $table.passageTitle,
@@ -3272,6 +3403,8 @@ class $$ReadingSessionsTableTableManager
                 Value<int> foregroundMs = const Value.absent(),
                 Value<DateTime?> completedAt = const Value.absent(),
                 Value<String?> invalidatedReason = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<String?> reference = const Value.absent(),
                 Value<String?> passageTitle = const Value.absent(),
                 Value<String?> passageBookId = const Value.absent(),
                 Value<int?> passageFrom = const Value.absent(),
@@ -3285,6 +3418,8 @@ class $$ReadingSessionsTableTableManager
                 foregroundMs: foregroundMs,
                 completedAt: completedAt,
                 invalidatedReason: invalidatedReason,
+                note: note,
+                reference: reference,
                 passageTitle: passageTitle,
                 passageBookId: passageBookId,
                 passageFrom: passageFrom,
@@ -3300,6 +3435,8 @@ class $$ReadingSessionsTableTableManager
                 Value<int> foregroundMs = const Value.absent(),
                 Value<DateTime?> completedAt = const Value.absent(),
                 Value<String?> invalidatedReason = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<String?> reference = const Value.absent(),
                 Value<String?> passageTitle = const Value.absent(),
                 Value<String?> passageBookId = const Value.absent(),
                 Value<int?> passageFrom = const Value.absent(),
@@ -3313,6 +3450,8 @@ class $$ReadingSessionsTableTableManager
                 foregroundMs: foregroundMs,
                 completedAt: completedAt,
                 invalidatedReason: invalidatedReason,
+                note: note,
+                reference: reference,
                 passageTitle: passageTitle,
                 passageBookId: passageBookId,
                 passageFrom: passageFrom,

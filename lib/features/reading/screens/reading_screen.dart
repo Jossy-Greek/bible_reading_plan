@@ -285,6 +285,7 @@ class _ReadingScreenState extends ConsumerState<ReadingScreen>
         context.go(
           '/reading/complete',
           extra: CompletionArgs(
+            sessionId: session.id,
             label: passage != null
                 ? '${passage.title} · ${passage.reference}'
                 : day.label,

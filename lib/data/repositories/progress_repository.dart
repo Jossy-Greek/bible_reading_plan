@@ -46,6 +46,7 @@ class ProgressRepository {
           ReadingSessionsCompanion.insert(
             planId: plan.id,
             dayIndex: day.dayIndex,
+            reference: Value(day.label),
             startedAt: nowUtc,
             requiredMs: day.requiredDuration.inMilliseconds,
           ),
@@ -70,6 +71,7 @@ class ProgressRepository {
             dayIndex: -1,
             startedAt: nowUtc,
             requiredMs: required.inMilliseconds,
+            reference: Value(passage.reference),
             passageTitle: Value(passage.title),
             passageBookId: Value(passage.bookId),
             passageFrom: Value(passage.fromChapter),
@@ -147,6 +149,39 @@ class ProgressRepository {
       return CompletionResult(streak: streak, newBadges: newBadges);
     });
   }
+
+  /// Saves (or clears) the reflection on a sitting. Empty is null: a note
+  /// the reader emptied should disappear from the journal, not sit there
+  /// blank.
+  Future<void> setNote(int sessionId, String note) {
+    final trimmed = note.trim();
+    return (_db.update(
+      _db.readingSessions,
+    )..where((s) => s.id.equals(sessionId))).write(
+      ReadingSessionsCompanion(note: Value(trimmed.isEmpty ? null : trimmed)),
+    );
+  }
+
+  /// Every reflection, newest first.
+  Stream<List<ReadingSession>> watchReflections() =>
+      (_db.select(_db.readingSessions)
+            ..where((s) => s.note.isNotNull() & s.completedAt.isNotNull())
+            ..orderBy([(s) => OrderingTerm.desc(s.completedAt)]))
+          .watch();
+
+  /// The completed sitting for a plan day, if there is one — the row a note
+  /// for that day hangs off.
+  Future<ReadingSession?> completedSessionFor(int planId, int dayIndex) =>
+      (_db.select(_db.readingSessions)
+            ..where(
+              (s) =>
+                  s.planId.equals(planId) &
+                  s.dayIndex.equals(dayIndex) &
+                  s.completedAt.isNotNull(),
+            )
+            ..orderBy([(s) => OrderingTerm.desc(s.completedAt)])
+            ..limit(1))
+          .getSingleOrNull();
 
   Future<void> invalidateSession(int id, String reason) =>
       (_db.update(_db.readingSessions)..where((s) => s.id.equals(id))).write(

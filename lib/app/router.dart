@@ -8,6 +8,7 @@ import '../features/home/screens/home_screen.dart';
 import '../features/onboarding/screens/name_screen.dart';
 import '../features/onboarding/screens/plan_screen.dart';
 import '../features/onboarding/screens/reminder_screen.dart';
+import '../features/journal/screens/journal_screen.dart';
 import '../features/passages/screens/passages_screen.dart';
 import '../features/progress/screens/progress_screen.dart';
 import '../features/reading/screens/completion_screen.dart';
@@ -81,6 +82,11 @@ GoRouter buildRouter(SettingsStore settings) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/journal',
+        parentNavigatorKey: _rootKey,
+        builder: (_, _) => const JournalScreen(),
       ),
       GoRoute(
         path: '/passages',

@@ -88,6 +88,11 @@ final passageTextProvider = FutureProvider.family<List<ChapterText>, String>((
   return ref.watch(bibleTextProvider).forAssignments(assignmentsFromKey(key));
 });
 
+/// Every reflection the reader has written, newest first.
+final reflectionsProvider = StreamProvider<List<ReadingSession>>(
+  (ref) => ref.watch(progressRepositoryProvider).watchReflections(),
+);
+
 final completedDayIndexesProvider = StreamProvider<Set<int>>((ref) {
   final plan = ref.watch(activePlanProvider).value;
   if (plan == null) return Stream.value(const <int>{});
